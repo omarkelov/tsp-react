@@ -1,10 +1,14 @@
 import { FC } from 'react';
+import { logoutAsync } from '../store/authSlice';
+import { useAppDispatch } from '../store/hooks';
 
 
 const NavigationBar: FC = () => {
+    const dispatch = useAppDispatch();
+
     return (
         <div>
-            NavigationBar
+            <button onClick={() => dispatch(logoutAsync())}>Logout</button>
         </div>
     );
 };
