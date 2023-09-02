@@ -1,6 +1,6 @@
 import DictionariesPage from './pages/DictionariesPage';
 import DictionaryPage from './pages/DictionaryPage';
-import LoginPage from './pages/LoginPage';
+import LoginPage from './pages/login/LoginPage';
 import MoviePage from './pages/MoviePage';
 import MoviesPage from './pages/MoviesPage';
 import TestPage from './pages/TestPage';
