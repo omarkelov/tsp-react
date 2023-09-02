@@ -1,0 +1,13 @@
+.input {
+    background: #f0ece9;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+
+    &:disabled {
+        background: #b8b7b4;
+    }
+
+    &:focus {
+        outline: none;
+    }
+}
