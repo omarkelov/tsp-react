@@ -1,3 +1,5 @@
+import { FC } from 'react';
+
 import DictionariesPage from './pages/DictionariesPage';
 import DictionaryPage from './pages/DictionaryPage';
 import LoginPage from './pages/login/LoginPage';
@@ -6,7 +8,12 @@ import MoviesPage from './pages/MoviesPage';
 import TestPage from './pages/TestPage';
 
 
-export const privateRoutes = [
+export interface PageRoute {
+    path: string;
+    Element: FC;
+}
+
+export const privateRoutes: PageRoute[] = [
     { path: '/movies', Element: MoviesPage },
     { path: '/movies/:id', Element: MoviePage },
     { path: '/dictionaries', Element: DictionariesPage },
@@ -14,6 +21,6 @@ export const privateRoutes = [
     { path: '/dictionaries/:name/test', Element: TestPage },
 ];
 
-export const publicRoutes = [
+export const publicRoutes: PageRoute[] = [
     { path: '/login', Element: LoginPage },
 ];
