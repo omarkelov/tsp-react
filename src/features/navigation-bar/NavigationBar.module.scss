@@ -12,9 +12,16 @@
             margin-left: auto;
         }
 
-        &:hover,
-        &.mLinkActive {
+        &:hover {
             color: #f0ece9;
+        }
+
+        &.mLinkActive {
+            text-decoration-color: #fc4e6f;
+
+            &:hover {
+                text-decoration-color: #f93358;
+            }
         }
     }
 }
