@@ -1,14 +1,14 @@
 import { FC } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { useLocalStorage } from 'usehooks-ts';
 import NavigationBar from './features/navigation-bar/NavigationBar';
+import { LOGGED_IN_KEY } from './store/authSlice';
 import { privateRoutes, publicRoutes } from './routes';
-import { selectIsLoggedIn } from './store/authSlice';
-import { useAppSelector } from './store/hooks';
 import './styles/App.module.scss';
 
 
 const App: FC = () => {
-    const isLoggedIn = useAppSelector(selectIsLoggedIn);
+    const [isLoggedIn] = useLocalStorage(LOGGED_IN_KEY, false);
 
     return (
         <BrowserRouter>

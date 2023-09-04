@@ -1,15 +1,16 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from './store';
 import { Credentials, fetchLogin, fetchLogout } from '../api/authAPI';
+import { persistInLocalStorage } from '../util/localStorage';
 
+
+export const LOGGED_IN_KEY = 'isLoggedIn';
 
 export interface AuthState {
-    isLoggedIn: boolean;
     status: 'idle' | 'loading' | 'failed';
 }
 
 const initialState: AuthState = {
-    isLoggedIn: false,
     status: 'idle',
 };
 
@@ -17,7 +18,10 @@ export const loginAsync = createAsyncThunk(
     'auth/fetchLogin',
     async (credentials: Credentials) => {
         const response = await fetchLogin(credentials);
-        return response.status === 200;
+
+        if (response.status === 200) {
+            persistInLocalStorage(LOGGED_IN_KEY, true);
+        }
     }
 );
 
@@ -25,7 +29,10 @@ export const logoutAsync = createAsyncThunk(
     'auth/fetchLogout',
     async () => {
         const response = await fetchLogout();
-        return response.status !== 200;
+
+        if (response.status === 200) {
+            persistInLocalStorage(LOGGED_IN_KEY, false);
+        }
     }
 );
 
@@ -38,9 +45,8 @@ export const authSlice = createSlice({
             .addCase(loginAsync.pending, state => {
                 state.status = 'loading';
             })
-            .addCase(loginAsync.fulfilled, (state, action) => {
+            .addCase(loginAsync.fulfilled, state => {
                 state.status = 'idle';
-                state.isLoggedIn = action.payload;
             })
             .addCase(loginAsync.rejected, state => {
                 state.status = 'failed';
@@ -48,17 +54,14 @@ export const authSlice = createSlice({
             .addCase(logoutAsync.pending, state => {
                 state.status = 'loading';
             })
-            .addCase(logoutAsync.fulfilled, (state, action) => {
+            .addCase(logoutAsync.fulfilled, state => {
                 state.status = 'idle';
-                state.isLoggedIn = action.payload;
             })
             .addCase(logoutAsync.rejected, state => {
                 state.status = 'failed';
             })
 })
 
-// export const {  } = authSlice.actions;
-
-export const selectIsLoggedIn = (state: RootState) => state.auth.isLoggedIn;
+export const selectStatus = (state: RootState) => state.auth.status;
 
 export default authSlice.reducer;
