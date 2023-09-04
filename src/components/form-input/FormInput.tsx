@@ -10,10 +10,7 @@ const FormInput: FC<{
     className?: string;
 } & RefAttributes<HTMLInputElement>> = forwardRef(({ label, type, className }, ref) => (
     <section className={styles.root}>
-        <label>
-            {label}:
-        </label>
-        <br />
+        <label>{label}:</label>
         <Input
             ref={ref}
             label={label}
