@@ -1,0 +1,20 @@
+.root {
+    display: flex;
+
+    .link {
+        display: inline-block;
+        margin: 0 10px;
+        padding: 2px 5px;
+        font-weight: 900;
+        color: #b8b7b4;
+
+        &:last-of-type {
+            margin-left: auto;
+        }
+
+        &:hover,
+        &.mLinkActive {
+            color: #f0ece9;
+        }
+    }
+}
