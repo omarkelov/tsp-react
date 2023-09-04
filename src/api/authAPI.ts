@@ -7,13 +7,13 @@ export const fetchLogin = (credentials: Credentials) => fetch('http://localhost:
     method: 'POST',
     headers: {
         'Accept': '*/*',
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: `username=${credentials.login}&password=${credentials.password}`,
-    credentials: 'include'
+    credentials: 'include',
 });
 
 export const fetchLogout = () => fetch('http://localhost:8081/logout', {
     method: 'GET',
-    credentials: 'include'
+    credentials: 'include',
 });

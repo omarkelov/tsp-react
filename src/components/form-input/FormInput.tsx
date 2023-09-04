@@ -1,6 +1,8 @@
-import { FC, RefAttributes, forwardRef } from 'react';
+import { FC, forwardRef, RefAttributes } from 'react';
+
 import { combineClassNames } from '../../util/classNames';
 import Input from '../input/Input';
+
 import styles from './FormInput.module.scss';
 
 

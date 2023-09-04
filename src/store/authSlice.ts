@@ -1,7 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { RootState } from './store';
+
 import { Credentials, fetchLogin, fetchLogout } from '../api/authAPI';
 import { persistInLocalStorage } from '../util/localStorage';
+
+import { RootState } from './store';
 
 
 export const LOGGED_IN_KEY = 'isLoggedIn';
@@ -59,8 +61,8 @@ export const authSlice = createSlice({
             })
             .addCase(logoutAsync.rejected, state => {
                 state.status = 'failed';
-            })
-})
+            }),
+});
 
 export const selectStatus = (state: RootState) => state.auth.status;
 

@@ -1,9 +1,10 @@
 import { FC } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { useLocalStorage } from 'usehooks-ts';
+
 import NavigationBar from './features/navigation-bar/NavigationBar';
-import { LOGGED_IN_KEY } from './store/authSlice';
 import { privateRoutes, publicRoutes } from './routes';
+import { LOGGED_IN_KEY } from './store/authSlice';
 import './styles/App.module.scss';
 
 

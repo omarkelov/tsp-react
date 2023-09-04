@@ -1,6 +1,8 @@
 import { FC } from 'react';
+
 import { combineClassNames } from '../../util/classNames';
-import styles from './Button.module.scss'
+
+import styles from './Button.module.scss';
 
 
 type Variant = 'primary' | 'secondary';
