@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { logoutAsync } from '../store/authSlice';
-import { useAppDispatch } from '../store/hooks';
+import { logoutAsync } from '../../store/authSlice';
+import { useAppDispatch } from '../../store/hooks';
 
 
 const NavigationBar: FC = () => {

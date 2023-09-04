@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import NavigationBar from './components/NavigationBar';
+import NavigationBar from './features/navigation-bar/NavigationBar';
 import { privateRoutes, publicRoutes } from './routes';
 import { selectIsLoggedIn } from './store/authSlice';
 import { useAppSelector } from './store/hooks';
