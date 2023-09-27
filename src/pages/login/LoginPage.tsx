@@ -1,14 +1,14 @@
 import { FC } from 'react';
-import { useDocumentTitle } from 'usehooks-ts';
 
 import logo from '../../assets/logo-big.png';
 import LoginForm from '../../features/login-form/LoginForm';
+import { useAppTitle } from '../../hooks/title';
 
 import styles from './LoginPage.module.scss';
 
 
 const LoginPage: FC = () => {
-    useDocumentTitle('Login | Translate Subs Player');
+    useAppTitle('Login');
 
     return (
         <div className={styles.root}>
