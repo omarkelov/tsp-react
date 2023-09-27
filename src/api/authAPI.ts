@@ -1,6 +1,6 @@
 export interface Credentials {
     login: string;
-    password: string
+    password: string;
 }
 
 export const fetchLogin = (credentials: Credentials) => fetch('http://localhost:8081/login', {

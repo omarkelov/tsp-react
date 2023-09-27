@@ -1,5 +1,6 @@
 import { FC } from 'react';
 
+import DictionariesList from '../../features/dictionaries-list/DictionariesList';
 import PageContent from '../../features/page-content/PageContent';
 import { useAppTitle } from '../../hooks/title';
 
@@ -9,7 +10,7 @@ const DictionariesPage: FC = () => {
 
     return (
         <PageContent title='Dictionaries'>
-            DictionariesPage
+            <DictionariesList />
         </PageContent>
     );
 };
