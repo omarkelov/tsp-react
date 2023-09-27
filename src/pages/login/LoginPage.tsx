@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
-import logo from '../../assets/logo-big.png';
+import logo from '/images/logo-big.png'; // eslint-disable-line import/no-unresolved
+
 import LoginForm from '../../features/login-form/LoginForm';
 import { useAppTitle } from '../../hooks/title';
 
