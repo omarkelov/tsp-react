@@ -2,6 +2,7 @@ import { FC, memo, useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { DictionaryItem as Dictionary, fetchDeleteDictionary, fetchDictionaries } from '../../api/dictionariesAPI';
+import Spinner from '../../components/spinner/Spinner';
 
 import styles from './DictionariesList.module.scss';
 
@@ -35,7 +36,7 @@ const DictionaryItem: FC<{
 });
 
 const DictionariesList: FC = () => {
-    const [dictionaries, setDictionaries] = useState<Dictionary[]>();
+    const [dictionaries, setDictionaries] = useState<Dictionary[]>([]);
 
     useEffect(() => {
         const abortController = new AbortController();
@@ -56,8 +57,8 @@ const DictionariesList: FC = () => {
         setDictionaries(prevDictionaries => prevDictionaries!.filter(({ name }) => name !== dictionary.name));
     }, [setDictionaries]);
 
-    if (!dictionaries) {
-        return null;
+    if (!dictionaries.length) {
+        return <Spinner className={styles.spinner} />;
     }
 
     return (
