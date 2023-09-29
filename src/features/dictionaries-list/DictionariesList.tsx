@@ -1,75 +1,75 @@
-import { FC, memo, useCallback, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 
-import { DictionaryItem as Dictionary, fetchDeleteDictionary, fetchDictionaries } from '../../api/dictionariesAPI';
+import { Dictionary, fetchDictionaries } from '../../api/dictionariesAPI';
 import Spinner from '../../components/spinner/Spinner';
 
 import styles from './DictionariesList.module.scss';
+import DictionaryItem from './DictionaryItem';
 
 
-const DictionaryItem: FC<{
-    dictionary: Dictionary;
-    onDictionaryDeleted: (dictionary: Dictionary) => void;
-}> = memo(({ dictionary, onDictionaryDeleted }) => {
-    const handleRemoveClick = () => {
-        if (confirm('Are you sure you want to delete this dictionary?')) {
-            fetchDeleteDictionary(dictionary.name)
-                .then(response => {
-                    if (response.status == 204) {
-                        onDictionaryDeleted(dictionary);
-                    } else {
-                        alert('Cannot remove the dictionary: status code is ' + response.status);
-                    }
-                })
-                .catch(e => {
-                    alert('Cannot remove the dictionary: ' + e.message);
-                });
-        }
-    };
-
-    return (
-        <li className={styles.dictionary}>
-            <Link className={styles.link} to={dictionary.href}>{dictionary.name}</Link>
-            <div className={styles.removeButton} onClick={handleRemoveClick}></div>
-        </li>
-    );
-});
+const LIMIT = 25;
 
 const DictionariesList: FC = () => {
     const [dictionaries, setDictionaries] = useState<Dictionary[]>([]);
+    const [hasMore, setHasMore] = useState<boolean>(true);
+    const [page, setPage] = useState<number>(0);
+    const spinnerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const abortController = new AbortController();
+        const intersectionObserver = new IntersectionObserver(([observable]) => {
+            if (!observable.isIntersecting) {
+                return;
+            }
 
-        fetchDictionaries(abortController.signal)
-            .then(response => response.json())
-            .then(json => setDictionaries(json))
-            .catch(e => {
-                if (e.name !== 'AbortError') {
-                    throw e;
-                }
-            });
+            fetchDictionaries(abortController.signal, page, LIMIT)
+                .then(response => response.json())
+                .then((extraDictionaries: Dictionary[]) => {
+                    if (!extraDictionaries.length) {
+                        setHasMore(false);
+                        return;
+                    }
 
-        return () => abortController.abort();
-    }, []);
+                    setDictionaries(prevDictionaries => [...prevDictionaries, ...extraDictionaries]);
+                    setPage(prevPage => prevPage + 1);
+
+                    if (extraDictionaries.length < LIMIT) {
+                        setHasMore(false);
+                    }
+                })
+                .catch(e => {
+                    if (e.name !== 'AbortError') {
+                        throw e;
+                    }
+                });
+        });
+
+        if (spinnerRef?.current) {
+            intersectionObserver.observe(spinnerRef.current);
+        }
+
+        return () => {
+            abortController.abort();
+            intersectionObserver.disconnect();
+        };
+    }, [page]);
 
     const onDictionaryDeleted = useCallback((dictionary: Dictionary) => {
         setDictionaries(prevDictionaries => prevDictionaries!.filter(({ name }) => name !== dictionary.name));
     }, [setDictionaries]);
 
-    if (!dictionaries.length) {
-        return <Spinner className={styles.spinner} />;
-    }
-
     return (
-        <ul className={styles.root}>
-            {dictionaries.map(dictionary => (
-                <DictionaryItem
-                    key={dictionary.name}
-                    dictionary={dictionary}
-                    onDictionaryDeleted={onDictionaryDeleted} />
-            ))}
-        </ul>
+        <div>
+            <ul className={styles.dictionaries}>
+                {!!dictionaries.length && dictionaries.map(dictionary => (
+                    <DictionaryItem
+                        key={dictionary.name}
+                        dictionary={dictionary}
+                        onDictionaryDeleted={onDictionaryDeleted} />
+                ))}
+            </ul>
+            {hasMore && <Spinner ref={spinnerRef} className={styles.spinner} />}
+        </div>
     );
 };
 

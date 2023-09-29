@@ -1,14 +1,14 @@
-export interface DictionaryItem {
+export interface Dictionary {
     name: string;
     lang: string;
-    href: string;
 }
 
-export const fetchDictionaries = (signal: AbortSignal) => fetch('http://localhost:8081/movies', {
-    credentials: 'include',
-    method: 'GET',
-    signal,
-});
+export const fetchDictionaries = (signal: AbortSignal, page: number, limit: number) =>
+    fetch(`http://localhost:8081/movies?page=${page}&limit=${limit}`, {
+        credentials: 'include',
+        method: 'GET',
+        signal,
+    });
 
 export const fetchDeleteDictionary = (dictionaryName: string) => fetch(`http://localhost:8081/movies/${dictionaryName}`, {
     credentials: 'include',
