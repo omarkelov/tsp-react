@@ -1,34 +1,27 @@
 import { FC, memo } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Dictionary, fetchDeleteDictionary } from '../../api/dictionariesAPI';
+import { Dictionary } from '../../api/dictionariesAPI';
+import { deleteDictionaryAsync } from '../../store/dictionariesSlice';
+import { useAppDispatch } from '../../store/hooks';
 
 import styles from './DictionaryItem.module.scss';
 
 
 const DictionaryItem: FC<{
     dictionary: Dictionary;
-    onDictionaryDeleted: (dictionary: Dictionary) => void;
-}> = memo(({ dictionary, onDictionaryDeleted }) => {
+}> = memo(({ dictionary: { name } }) => {
+    const dispatch = useAppDispatch();
+
     const handleRemoveClick = () => {
         if (confirm('Are you sure you want to delete this dictionary?')) {
-            fetchDeleteDictionary(dictionary.name)
-                .then(response => {
-                    if (response.status == 204) {
-                        onDictionaryDeleted(dictionary);
-                    } else {
-                        alert('Cannot remove the dictionary: status code is ' + response.status);
-                    }
-                })
-                .catch(e => {
-                    alert('Cannot remove the dictionary: ' + e.message);
-                });
+            dispatch(deleteDictionaryAsync(name));
         }
     };
 
     return (
         <li className={styles.dictionary}>
-            <Link className={styles.link} to={`/movies/${dictionary.name}`}>{dictionary.name}</Link>
+            <Link className={styles.link} to={`/movies/${name}`}>{name}</Link>
             <div className={styles.removeButton} onClick={handleRemoveClick}></div>
         </li>
     );

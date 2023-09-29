@@ -1,62 +1,34 @@
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef } from 'react';
 
-import { Dictionary, fetchDictionaries } from '../../api/dictionariesAPI';
 import Spinner from '../../components/spinner/Spinner';
+import { getNextDictionariesAsync, selectDictionaries, selectHasMore, selectPage } from '../../store/dictionariesSlice';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 
 import styles from './DictionariesList.module.scss';
 import DictionaryItem from './DictionaryItem';
 
 
-const LIMIT = 25;
 
 const DictionariesList: FC = () => {
-    const [dictionaries, setDictionaries] = useState<Dictionary[]>([]);
-    const [hasMore, setHasMore] = useState<boolean>(true);
-    const [page, setPage] = useState<number>(0);
+    const dispatch = useAppDispatch();
+    const dictionaries = useAppSelector(selectDictionaries);
+    const hasMore = useAppSelector(selectHasMore);
+    const page = useAppSelector(selectPage);
     const spinnerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const abortController = new AbortController();
-        const intersectionObserver = new IntersectionObserver(([observable]) => {
-            if (!observable.isIntersecting) {
-                return;
+        const intersectionObserver = new IntersectionObserver(([{ isIntersecting }]) => {
+            if (isIntersecting) {
+                dispatch(getNextDictionariesAsync(page));
             }
-
-            fetchDictionaries(abortController.signal, page, LIMIT)
-                .then(response => response.json())
-                .then((extraDictionaries: Dictionary[]) => {
-                    if (!extraDictionaries.length) {
-                        setHasMore(false);
-                        return;
-                    }
-
-                    setDictionaries(prevDictionaries => [...prevDictionaries, ...extraDictionaries]);
-                    setPage(prevPage => prevPage + 1);
-
-                    if (extraDictionaries.length < LIMIT) {
-                        setHasMore(false);
-                    }
-                })
-                .catch(e => {
-                    if (e.name !== 'AbortError') {
-                        throw e;
-                    }
-                });
         });
 
         if (spinnerRef?.current) {
             intersectionObserver.observe(spinnerRef.current);
         }
 
-        return () => {
-            abortController.abort();
-            intersectionObserver.disconnect();
-        };
-    }, [page]);
-
-    const onDictionaryDeleted = useCallback((dictionary: Dictionary) => {
-        setDictionaries(prevDictionaries => prevDictionaries!.filter(({ name }) => name !== dictionary.name));
-    }, [setDictionaries]);
+        return () => intersectionObserver.disconnect();
+    }, [page, dispatch]);
 
     return (
         <div>
@@ -65,7 +37,7 @@ const DictionariesList: FC = () => {
                     <DictionaryItem
                         key={dictionary.name}
                         dictionary={dictionary}
-                        onDictionaryDeleted={onDictionaryDeleted} />
+                    />
                 ))}
             </ul>
             {hasMore && <Spinner ref={spinnerRef} className={styles.spinner} />}
