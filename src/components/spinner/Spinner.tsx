@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, forwardRef, RefAttributes } from 'react';
 
 import { combineClassNames } from '../../util/classNames';
 
@@ -18,8 +18,11 @@ const classNameBySize: {
 const Spinner: FC<{
     size?: Size;
     className?: string;
-}> = ({size = 'medium', className}) => (
-    <div className={combineClassNames(styles.spinner, classNameBySize[size], className)}></div>
-);
+} & RefAttributes<HTMLDivElement>> = forwardRef(({ size = 'medium', className }, ref) => (
+    <div
+        ref={ref}
+        className={combineClassNames(styles.spinner, classNameBySize[size], className)}
+    />
+));
 
 export default Spinner;
