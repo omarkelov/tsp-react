@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef } from 'react';
 
 import Spinner from '../../components/spinner/Spinner';
-import { getNextDictionariesAsync, selectDictionaries, selectHasMore, selectPage } from '../../store/dictionariesSlice';
+import { getNextDictionariesAsync, initialize, selectDictionaries, selectHasMore, selectPage } from '../../store/dictionariesSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 
 import styles from './DictionariesList.module.scss';
@@ -15,6 +15,10 @@ const DictionariesList: FC = () => {
     const hasMore = useAppSelector(selectHasMore);
     const page = useAppSelector(selectPage);
     const spinnerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        dispatch(initialize());
+    }, [dispatch]);
 
     useEffect(() => {
         const intersectionObserver = new IntersectionObserver(([{ isIntersecting }]) => {

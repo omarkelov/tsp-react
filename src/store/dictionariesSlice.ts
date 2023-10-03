@@ -51,7 +51,9 @@ export const deleteDictionaryAsync = createAsyncThunk(
 export const dictionariesSlice = createSlice({
     name: 'dictionaries',
     initialState,
-    reducers: {},
+    reducers: {
+        initialize: _ => initialState, // eslint-disable-line @typescript-eslint/no-unused-vars
+    },
     extraReducers: builder =>
         builder
             .addCase(getNextDictionariesAsync.pending, state => {
@@ -86,6 +88,8 @@ export const dictionariesSlice = createSlice({
                 state.deleteStatus = 'failed';
             }),
 });
+
+export const { initialize } = dictionariesSlice.actions;
 
 export const selectFetchStatus = (state: RootState) => state.dictionaries.fetchStatus;
 export const selectDeleteStatus = (state: RootState) => state.dictionaries.deleteStatus;
