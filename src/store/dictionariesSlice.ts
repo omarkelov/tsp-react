@@ -8,6 +8,7 @@ import { RootState } from './store';
 const LIMIT = 25;
 
 type Status = 'idle' | 'loading' | 'failed';
+type DeletionStatus = 'deleting' | 'deleted';
 
 export interface DictionariesState {
     fetchStatus: Status;
@@ -15,8 +16,7 @@ export interface DictionariesState {
     dictionaries: Dictionary[];
     hasMore: boolean;
     page: number;
-    deletingDictionariesNames: string[];
-    deletedDictionariesNames: string[];
+    deletionStatusByDictionaryName: { [key: string]: DeletionStatus; };
 }
 
 const initialState: DictionariesState = {
@@ -25,8 +25,7 @@ const initialState: DictionariesState = {
     dictionaries: [],
     hasMore: true,
     page: 0,
-    deletingDictionariesNames: [],
-    deletedDictionariesNames: [],
+    deletionStatusByDictionaryName: {},
 };
 
 export const getNextDictionariesAsync = createAsyncThunk(
@@ -60,7 +59,7 @@ export const dictionariesSlice = createSlice({
         initialize: _ => initialState, // eslint-disable-line @typescript-eslint/no-unused-vars
         deleteDictionary: (state, { payload: name }: { payload: string }) => {
             state.dictionaries = state.dictionaries.filter(d => d.name !== name);
-            state.deletedDictionariesNames = state.deletedDictionariesNames.filter(n => n !== name);
+            delete state.deletionStatusByDictionaryName[name];
         },
     },
     extraReducers: builder =>
@@ -88,16 +87,15 @@ export const dictionariesSlice = createSlice({
             })
             .addCase(deleteDictionaryAsync.pending, (state, { meta: { arg: name } }) => {
                 state.deleteStatus = 'loading';
-                state.deletingDictionariesNames.push(name);
+                state.deletionStatusByDictionaryName[name] = 'deleting';
             })
             .addCase(deleteDictionaryAsync.fulfilled, (state, { meta: { arg: name } }) => {
                 state.deleteStatus = 'idle';
-                state.deletingDictionariesNames = state.deletingDictionariesNames.filter(n => n !== name);
-                state.deletedDictionariesNames.push(name);
+                state.deletionStatusByDictionaryName[name] = 'deleted';
             })
             .addCase(deleteDictionaryAsync.rejected, (state, { meta: { arg: name } }) => {
                 state.deleteStatus = 'failed';
-                state.deletingDictionariesNames = state.deletingDictionariesNames.filter(n => n !== name);
+                delete state.deletionStatusByDictionaryName[name];
             }),
 });
 
@@ -108,7 +106,6 @@ export const selectDeleteStatus = (state: RootState) => state.dictionaries.delet
 export const selectDictionaries = (state: RootState) => state.dictionaries.dictionaries;
 export const selectHasMore = (state: RootState) => state.dictionaries.hasMore;
 export const selectPage = (state: RootState) => state.dictionaries.page;
-export const selectDeletingDictionariesNames = (state: RootState) => state.dictionaries.deletingDictionariesNames;
-export const selectDeletedDictionariesNames = (state: RootState) => state.dictionaries.deletedDictionariesNames;
+export const selectDeletionStatusByDictionaryName = (state: RootState) => state.dictionaries.deletionStatusByDictionaryName;
 
 export default dictionariesSlice.reducer;

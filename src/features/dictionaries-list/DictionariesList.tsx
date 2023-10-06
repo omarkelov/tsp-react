@@ -4,8 +4,7 @@ import Spinner from '../../components/spinner/Spinner';
 import {
     getNextDictionariesAsync,
     // initialize,
-    selectDeletedDictionariesNames,
-    selectDeletingDictionariesNames,
+    selectDeletionStatusByDictionaryName,
     selectDictionaries,
     selectHasMore,
     selectPage,
@@ -22,8 +21,7 @@ const DictionariesList: FC = () => {
     const dictionaries = useAppSelector(selectDictionaries);
     const hasMore = useAppSelector(selectHasMore);
     const page = useAppSelector(selectPage);
-    const deletingDictionariesNames = useAppSelector(selectDeletingDictionariesNames);
-    const deletedDictionariesNames = useAppSelector(selectDeletedDictionariesNames);
+    const deletionStatusByDictionaryName = useAppSelector(selectDeletionStatusByDictionaryName);
     const spinnerRef = useRef<HTMLDivElement>(null);
 
     /* useEffect(() => {
@@ -51,8 +49,8 @@ const DictionariesList: FC = () => {
                     <DictionaryItem
                         key={dictionary.name}
                         dictionary={dictionary}
-                        isDeleting={deletingDictionariesNames.includes(dictionary.name)}
-                        isDeleted={deletedDictionariesNames.includes(dictionary.name)}
+                        isDeleting={deletionStatusByDictionaryName[dictionary.name] === 'deleting'}
+                        isDeleted={deletionStatusByDictionaryName[dictionary.name] === 'deleted'}
                     />
                 ))}
             </ul>
