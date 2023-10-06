@@ -1,8 +1,9 @@
-import { FC, memo } from 'react';
+import { FC, memo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Dictionary } from '../../api/dictionariesAPI';
-import { deleteDictionaryAsync } from '../../store/dictionariesSlice';
+import SlideUp from '../../components/slide-up/SlideUp';
+import { deleteDictionary, deleteDictionaryAsync } from '../../store/dictionariesSlice';
 import { useAppDispatch } from '../../store/hooks';
 import { combineClassNames } from '../../util/classNames';
 
@@ -12,20 +13,46 @@ import styles from './DictionaryItem.module.scss';
 const DictionaryItem: FC<{
     dictionary: Dictionary;
     isDeleting: boolean;
-}> = memo(({ dictionary: { name }, isDeleting }) => {
+    isDeleted: boolean;
+}> = memo(({ dictionary: { name }, isDeleting, isDeleted }) => {
     const dispatch = useAppDispatch();
+    const liRef = useRef<HTMLLIElement>(null);
 
-    const handleRemoveClick = () => {
+    const handleDeleteClick = () => {
         if (confirm('Are you sure you want to delete this dictionary?')) {
             dispatch(deleteDictionaryAsync(name));
         }
     };
 
-    return (
-        <li className={combineClassNames(styles.dictionary, isDeleting && styles.mDictionaryDeleting)}>
-            <Link className={styles.link} to={`/movies/${name}`}>{name}</Link>
-            <div className={styles.removeButton} onClick={handleRemoveClick}></div>
+    const liElement = (
+        <li
+            ref={liRef}
+            className={combineClassNames(styles.dictionary, (isDeleting || isDeleted) && styles.mDictionaryDeleting)}
+        >
+            <Link
+                className={styles.link}
+                to={`/dictionaries/${name}`}
+            >
+                {name}
+            </Link>
+            <div
+                className={styles.removeButton}
+                onClick={handleDeleteClick}
+            />
         </li>
+    );
+
+    if (!isDeleted) {
+        return liElement;
+    }
+
+    return (
+        <SlideUp
+            childRef={liRef}
+            onAnimationFinished={() => dispatch(deleteDictionary(name))}
+        >
+            {liElement}
+        </SlideUp>
     );
 });
 

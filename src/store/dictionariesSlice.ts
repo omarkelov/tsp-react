@@ -16,6 +16,7 @@ export interface DictionariesState {
     hasMore: boolean;
     page: number;
     deletingDictionariesNames: string[];
+    deletedDictionariesNames: string[];
 }
 
 const initialState: DictionariesState = {
@@ -25,6 +26,7 @@ const initialState: DictionariesState = {
     hasMore: true,
     page: 0,
     deletingDictionariesNames: [],
+    deletedDictionariesNames: [],
 };
 
 export const getNextDictionariesAsync = createAsyncThunk(
@@ -56,6 +58,10 @@ export const dictionariesSlice = createSlice({
     initialState,
     reducers: {
         initialize: _ => initialState, // eslint-disable-line @typescript-eslint/no-unused-vars
+        deleteDictionary: (state, { payload: name }: { payload: string }) => {
+            state.dictionaries = state.dictionaries.filter(d => d.name !== name);
+            state.deletedDictionariesNames = state.deletedDictionariesNames.filter(n => n !== name);
+        },
     },
     extraReducers: builder =>
         builder
@@ -86,8 +92,8 @@ export const dictionariesSlice = createSlice({
             })
             .addCase(deleteDictionaryAsync.fulfilled, (state, { meta: { arg: name } }) => {
                 state.deleteStatus = 'idle';
-                state.dictionaries = state.dictionaries.filter(d => d.name !== name);
                 state.deletingDictionariesNames = state.deletingDictionariesNames.filter(n => n !== name);
+                state.deletedDictionariesNames.push(name);
             })
             .addCase(deleteDictionaryAsync.rejected, (state, { meta: { arg: name } }) => {
                 state.deleteStatus = 'failed';
@@ -95,7 +101,7 @@ export const dictionariesSlice = createSlice({
             }),
 });
 
-export const { initialize } = dictionariesSlice.actions;
+export const { initialize, deleteDictionary } = dictionariesSlice.actions;
 
 export const selectFetchStatus = (state: RootState) => state.dictionaries.fetchStatus;
 export const selectDeleteStatus = (state: RootState) => state.dictionaries.deleteStatus;
@@ -103,5 +109,6 @@ export const selectDictionaries = (state: RootState) => state.dictionaries.dicti
 export const selectHasMore = (state: RootState) => state.dictionaries.hasMore;
 export const selectPage = (state: RootState) => state.dictionaries.page;
 export const selectDeletingDictionariesNames = (state: RootState) => state.dictionaries.deletingDictionariesNames;
+export const selectDeletedDictionariesNames = (state: RootState) => state.dictionaries.deletedDictionariesNames;
 
 export default dictionariesSlice.reducer;

@@ -3,7 +3,8 @@ import { FC, useEffect, useRef } from 'react';
 import Spinner from '../../components/spinner/Spinner';
 import {
     getNextDictionariesAsync,
-    initialize,
+    // initialize,
+    selectDeletedDictionariesNames,
     selectDeletingDictionariesNames,
     selectDictionaries,
     selectHasMore,
@@ -22,11 +23,12 @@ const DictionariesList: FC = () => {
     const hasMore = useAppSelector(selectHasMore);
     const page = useAppSelector(selectPage);
     const deletingDictionariesNames = useAppSelector(selectDeletingDictionariesNames);
+    const deletedDictionariesNames = useAppSelector(selectDeletedDictionariesNames);
     const spinnerRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
+    /* useEffect(() => {
         dispatch(initialize());
-    }, [dispatch]);
+    }, [dispatch]); */
 
     useEffect(() => {
         const intersectionObserver = new IntersectionObserver(([{ isIntersecting }]) => {
@@ -50,6 +52,7 @@ const DictionariesList: FC = () => {
                         key={dictionary.name}
                         dictionary={dictionary}
                         isDeleting={deletingDictionariesNames.includes(dictionary.name)}
+                        isDeleted={deletedDictionariesNames.includes(dictionary.name)}
                     />
                 ))}
             </ul>
