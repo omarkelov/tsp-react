@@ -4,13 +4,15 @@ import { Link } from 'react-router-dom';
 import { Dictionary } from '../../api/dictionariesAPI';
 import { deleteDictionaryAsync } from '../../store/dictionariesSlice';
 import { useAppDispatch } from '../../store/hooks';
+import { combineClassNames } from '../../util/classNames';
 
 import styles from './DictionaryItem.module.scss';
 
 
 const DictionaryItem: FC<{
     dictionary: Dictionary;
-}> = memo(({ dictionary: { name } }) => {
+    isDeleting: boolean;
+}> = memo(({ dictionary: { name }, isDeleting }) => {
     const dispatch = useAppDispatch();
 
     const handleRemoveClick = () => {
@@ -20,7 +22,7 @@ const DictionaryItem: FC<{
     };
 
     return (
-        <li className={styles.dictionary}>
+        <li className={combineClassNames(styles.dictionary, isDeleting && styles.mDictionaryDeleting)}>
             <Link className={styles.link} to={`/movies/${name}`}>{name}</Link>
             <div className={styles.removeButton} onClick={handleRemoveClick}></div>
         </li>

@@ -15,6 +15,7 @@ export interface DictionariesState {
     dictionaries: Dictionary[];
     hasMore: boolean;
     page: number;
+    deletingDictionariesNames: string[];
 }
 
 const initialState: DictionariesState = {
@@ -23,28 +24,30 @@ const initialState: DictionariesState = {
     dictionaries: [],
     hasMore: true,
     page: 0,
+    deletingDictionariesNames: [],
 };
 
 export const getNextDictionariesAsync = createAsyncThunk(
     'dictionaries/getNextDictionaries',
-    async (page: number): Promise<Dictionary[]> => {
+    async (page: number, { rejectWithValue }) => {
         const response = await fetchDictionaries(page, LIMIT);
-        return response.json();
+
+        if (!response.ok) {
+            return rejectWithValue({ code: response.status }); // TODO: handle
+        }
+
+        return response.json() as unknown as Dictionary[];
     }
 );
 
 export const deleteDictionaryAsync = createAsyncThunk(
     'dictionaries/deleteDictionary',
-    async (name: string): Promise<string> => {
+    async (name: string, { rejectWithValue }) => {
         const response = await fetchDeleteDictionary(name);
 
-        return new Promise((resolve, reject) => {
-            if (response.status == 204) {
-                resolve(name);
-            } else {
-                reject();
-            }
-        });
+        if (!response.ok) {
+            return rejectWithValue({ code: response.status }); // TODO: handle
+        }
     }
 );
 
@@ -77,15 +80,18 @@ export const dictionariesSlice = createSlice({
             .addCase(getNextDictionariesAsync.rejected, state => {
                 state.fetchStatus = 'failed';
             })
-            .addCase(deleteDictionaryAsync.pending, state => {
+            .addCase(deleteDictionaryAsync.pending, (state, { meta: { arg: name } }) => {
                 state.deleteStatus = 'loading';
+                state.deletingDictionariesNames.push(name);
             })
-            .addCase(deleteDictionaryAsync.fulfilled, (state, { payload: name }) => {
+            .addCase(deleteDictionaryAsync.fulfilled, (state, { meta: { arg: name } }) => {
                 state.deleteStatus = 'idle';
                 state.dictionaries = state.dictionaries.filter(d => d.name !== name);
+                state.deletingDictionariesNames = state.deletingDictionariesNames.filter(n => n !== name);
             })
-            .addCase(deleteDictionaryAsync.rejected, state => {
+            .addCase(deleteDictionaryAsync.rejected, (state, { meta: { arg: name } }) => {
                 state.deleteStatus = 'failed';
+                state.deletingDictionariesNames = state.deletingDictionariesNames.filter(n => n !== name);
             }),
 });
 
@@ -96,5 +102,6 @@ export const selectDeleteStatus = (state: RootState) => state.dictionaries.delet
 export const selectDictionaries = (state: RootState) => state.dictionaries.dictionaries;
 export const selectHasMore = (state: RootState) => state.dictionaries.hasMore;
 export const selectPage = (state: RootState) => state.dictionaries.page;
+export const selectDeletingDictionariesNames = (state: RootState) => state.dictionaries.deletingDictionariesNames;
 
 export default dictionariesSlice.reducer;

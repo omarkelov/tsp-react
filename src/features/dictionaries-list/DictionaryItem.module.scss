@@ -30,4 +30,13 @@
             visibility: visible;
         }
     }
+
+    &.mDictionaryDeleting {
+        opacity: 0.5;
+        cursor: wait;
+
+        .link, .removeButton {
+            pointer-events: none;
+        }
+    }
 }

@@ -1,7 +1,14 @@
 import { FC, useEffect, useRef } from 'react';
 
 import Spinner from '../../components/spinner/Spinner';
-import { getNextDictionariesAsync, initialize, selectDictionaries, selectHasMore, selectPage } from '../../store/dictionariesSlice';
+import {
+    getNextDictionariesAsync,
+    initialize,
+    selectDeletingDictionariesNames,
+    selectDictionaries,
+    selectHasMore,
+    selectPage,
+} from '../../store/dictionariesSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 
 import styles from './DictionariesList.module.scss';
@@ -14,6 +21,7 @@ const DictionariesList: FC = () => {
     const dictionaries = useAppSelector(selectDictionaries);
     const hasMore = useAppSelector(selectHasMore);
     const page = useAppSelector(selectPage);
+    const deletingDictionariesNames = useAppSelector(selectDeletingDictionariesNames);
     const spinnerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -41,6 +49,7 @@ const DictionariesList: FC = () => {
                     <DictionaryItem
                         key={dictionary.name}
                         dictionary={dictionary}
+                        isDeleting={deletingDictionariesNames.includes(dictionary.name)}
                     />
                 ))}
             </ul>
