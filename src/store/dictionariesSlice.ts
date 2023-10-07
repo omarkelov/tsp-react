@@ -26,16 +26,16 @@ const initialState: DictionariesState = {
     deletionStatusByDictionaryName: {},
 };
 
-export const getNextDictionariesAsync = createAsyncThunk(
+export const getNextDictionariesAsync = createAsyncThunk<Dictionary[], number, {rejectValue: { code: number }}>(
     'dictionaries/getNextDictionaries',
-    async ({page, signal}: {page: number, signal: AbortSignal}, { rejectWithValue }) => {
+    async (page, { rejectWithValue, signal }) => {
         const response = await fetchDictionaries(page, LIMIT, signal);
 
         if (!response.ok) {
             return rejectWithValue({ code: response.status }); // TODO: handle
         }
 
-        return response.json() as unknown as Dictionary[];
+        return response.json();
     }
 );
 
