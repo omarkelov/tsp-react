@@ -29,9 +29,11 @@ const DictionariesList: FC = () => {
     }, [dispatch]); */
 
     useEffect(() => {
+        const abortController = new AbortController();
         const intersectionObserver = new IntersectionObserver(([{ isIntersecting }]) => {
             if (isIntersecting) {
-                dispatch(getNextDictionariesAsync(page));
+                dispatch(getNextDictionariesAsync({ page, signal: abortController.signal }));
+                intersectionObserver.disconnect();
             }
         });
 
@@ -39,7 +41,10 @@ const DictionariesList: FC = () => {
             intersectionObserver.observe(spinnerRef.current);
         }
 
-        return () => intersectionObserver.disconnect();
+        return () => {
+            abortController.abort();
+            intersectionObserver.disconnect();
+        };
     }, [page, dispatch]);
 
     return (

@@ -30,8 +30,8 @@ const initialState: DictionariesState = {
 
 export const getNextDictionariesAsync = createAsyncThunk(
     'dictionaries/getNextDictionaries',
-    async (page: number, { rejectWithValue }) => {
-        const response = await fetchDictionaries(page, LIMIT);
+    async ({page, signal}: {page: number, signal: AbortSignal}, { rejectWithValue }) => {
+        const response = await fetchDictionaries(page, LIMIT, signal);
 
         if (!response.ok) {
             return rejectWithValue({ code: response.status }); // TODO: handle
