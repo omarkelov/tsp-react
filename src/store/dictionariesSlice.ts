@@ -54,7 +54,9 @@ export const dictionariesSlice = createSlice({
     name: 'dictionaries',
     initialState,
     reducers: {
-        initialize: _ => initialState, // eslint-disable-line @typescript-eslint/no-unused-vars
+        resetStatus: state => {
+            state.status = 'idle';
+        },
         deleteDictionary: (state, { payload: name }: { payload: string }) => {
             state.dictionaries = state.dictionaries.filter(d => d.name !== name);
             delete state.deletionStatusByDictionaryName[name];
@@ -81,7 +83,9 @@ export const dictionariesSlice = createSlice({
                 }
             })
             .addCase(getNextDictionariesAsync.rejected, state => {
-                state.status = 'failed';
+                if (state.status === 'loading') {
+                    state.status = 'failed';
+                }
             })
             .addCase(deleteDictionaryAsync.pending, (state, { meta: { arg: name } }) => {
                 state.deletionStatusByDictionaryName[name] = 'deleting';
@@ -94,7 +98,7 @@ export const dictionariesSlice = createSlice({
             }),
 });
 
-export const { initialize, deleteDictionary } = dictionariesSlice.actions;
+export const { resetStatus, deleteDictionary } = dictionariesSlice.actions;
 
 export const selectStatus = (state: RootState) => state.dictionaries.status;
 export const selectDictionaries = (state: RootState) => state.dictionaries.dictionaries;

@@ -1,7 +1,18 @@
-.dictionaries {
-    padding: 0;
-}
+.root {
+    .dictionaries {
+        padding: 0;
+    }
 
-.spinner {
-    margin: 30px auto;
+    .loadingRoot {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+
+        .loadingFailed {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+    }
 }
