@@ -11,8 +11,7 @@ type Status = 'idle' | 'loading' | 'failed';
 type DeletionStatus = 'deleting' | 'deleted';
 
 export interface DictionariesState {
-    fetchStatus: Status;
-    deleteStatus: Status;
+    status: Status;
     dictionaries: Dictionary[];
     hasMore: boolean;
     page: number;
@@ -20,8 +19,7 @@ export interface DictionariesState {
 }
 
 const initialState: DictionariesState = {
-    fetchStatus: 'idle',
-    deleteStatus: 'idle',
+    status: 'idle',
     dictionaries: [],
     hasMore: true,
     page: 0,
@@ -65,10 +63,10 @@ export const dictionariesSlice = createSlice({
     extraReducers: builder =>
         builder
             .addCase(getNextDictionariesAsync.pending, state => {
-                state.fetchStatus = 'loading';
+                state.status = 'loading';
             })
             .addCase(getNextDictionariesAsync.fulfilled, (state, { payload: extraDictionaries }) => {
-                state.fetchStatus = 'idle';
+                state.status = 'idle';
 
                 if (!extraDictionaries.length) {
                     state.hasMore = false;
@@ -83,26 +81,22 @@ export const dictionariesSlice = createSlice({
                 }
             })
             .addCase(getNextDictionariesAsync.rejected, state => {
-                state.fetchStatus = 'failed';
+                state.status = 'failed';
             })
             .addCase(deleteDictionaryAsync.pending, (state, { meta: { arg: name } }) => {
-                state.deleteStatus = 'loading';
                 state.deletionStatusByDictionaryName[name] = 'deleting';
             })
             .addCase(deleteDictionaryAsync.fulfilled, (state, { meta: { arg: name } }) => {
-                state.deleteStatus = 'idle';
                 state.deletionStatusByDictionaryName[name] = 'deleted';
             })
             .addCase(deleteDictionaryAsync.rejected, (state, { meta: { arg: name } }) => {
-                state.deleteStatus = 'failed';
                 delete state.deletionStatusByDictionaryName[name];
             }),
 });
 
 export const { initialize, deleteDictionary } = dictionariesSlice.actions;
 
-export const selectFetchStatus = (state: RootState) => state.dictionaries.fetchStatus;
-export const selectDeleteStatus = (state: RootState) => state.dictionaries.deleteStatus;
+export const selectStatus = (state: RootState) => state.dictionaries.status;
 export const selectDictionaries = (state: RootState) => state.dictionaries.dictionaries;
 export const selectHasMore = (state: RootState) => state.dictionaries.hasMore;
 export const selectPage = (state: RootState) => state.dictionaries.page;
