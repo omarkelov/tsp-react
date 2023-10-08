@@ -11,7 +11,7 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
-import authReducer, { IS_LOGGED_IN } from './authSlice';
+import authReducer, { LOGIN } from './authSlice';
 import dictionariesReducer from './dictionariesSlice';
 
 
@@ -20,7 +20,7 @@ const AUTH_REDUCER_KEY = 'auth';
 const persistConfig = {
     key: AUTH_REDUCER_KEY,
     storage,
-    whitelist: [IS_LOGGED_IN],
+    whitelist: [LOGIN],
 };
 
 const rootReducer = combineReducers({

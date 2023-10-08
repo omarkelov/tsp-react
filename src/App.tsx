@@ -4,7 +4,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import NavigationBar from './features/navigation-bar/NavigationBar';
 import { PageRoute, privateRoutes, publicRoutes } from './routes';
-import { selectIsLoggedIn } from './store/authSlice';
+import { selectLogin } from './store/authSlice';
 import styles from './styles/App.module.scss';
 
 
@@ -17,11 +17,11 @@ const generateRoutes = (pageRoutes: PageRoute[]) => pageRoutes.map(({ path, Elem
 ));
 
 const App: FC = () => {
-    const isLoggedIn = useSelector(selectIsLoggedIn);
+    const login = useSelector(selectLogin);
 
     return (
         <BrowserRouter>
-            {isLoggedIn ? (
+            {login ? (
                 <div className={styles.root}>
                     <NavigationBar />
                     <Routes>
