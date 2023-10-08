@@ -1,7 +1,8 @@
-import { FC, useCallback, useEffect, useRef } from 'react';
+import { FC, useCallback, useEffect } from 'react';
 
 import Button from '../../components/button/Button';
 import Spinner from '../../components/spinner/Spinner';
+import { useAbortOnUnmount } from '../../hooks/abortOnUnmount';
 import { useIntersectionObserver } from '../../hooks/intersectionObserver';
 import {
     getNextDictionariesAsync,
@@ -13,7 +14,6 @@ import {
     selectStatus,
 } from '../../store/dictionariesSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { Abortable } from '../../util/types';
 
 import styles from './DictionariesList.module.scss';
 import DictionaryItem from './DictionaryItem';
@@ -28,17 +28,14 @@ const DictionariesList: FC = () => {
     const page = useAppSelector(selectPage);
     const deletionStatusByDictionaryName = useAppSelector(selectDeletionStatusByDictionaryName);
 
-    const abortableRef = useRef<Abortable | null>(null);
+    const setAbortCallback = useAbortOnUnmount();
     const getNextDictionaries = useCallback(() => {
-        abortableRef.current = dispatch(getNextDictionariesAsync(page));
-    }, [page, dispatch]);
+        setAbortCallback(dispatch(getNextDictionariesAsync(page)));
+    }, [page, dispatch, setAbortCallback]);
     const spinnerRef = useIntersectionObserver<HTMLDivElement>(getNextDictionaries);
 
-    useEffect(() => {
-        return () => {
-            abortableRef.current?.abort();
-            dispatch(resetStatus());
-        };
+    useEffect(() => () => {
+        dispatch(resetStatus());
     }, [dispatch]);
 
     return (
