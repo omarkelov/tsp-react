@@ -1,7 +1,8 @@
 .dictionary {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-bottom: 5px;
-    text-align: center;
-    list-style: none;
 
     .link {
         color: #b8b7b4;
