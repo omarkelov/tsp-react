@@ -2,6 +2,7 @@ import { FC, useCallback, useEffect, useRef } from 'react';
 
 import Button from '../../components/button/Button';
 import Spinner from '../../components/spinner/Spinner';
+import { useIntersectionObserver } from '../../hooks/intersectionObserver';
 import {
     getNextDictionariesAsync,
     resetStatus,
@@ -27,12 +28,11 @@ const DictionariesList: FC = () => {
     const page = useAppSelector(selectPage);
     const deletionStatusByDictionaryName = useAppSelector(selectDeletionStatusByDictionaryName);
 
-    const spinnerRef = useRef<HTMLDivElement>(null);
     const abortableRef = useRef<Abortable | null>(null);
-
     const getNextDictionaries = useCallback(() => {
         abortableRef.current = dispatch(getNextDictionariesAsync(page));
     }, [page, dispatch]);
+    const spinnerRef = useIntersectionObserver<HTMLDivElement>(getNextDictionaries);
 
     useEffect(() => {
         return () => {
@@ -40,23 +40,6 @@ const DictionariesList: FC = () => {
             dispatch(resetStatus());
         };
     }, [dispatch]);
-
-    useEffect(() => {
-        const intersectionObserver = new IntersectionObserver(([{ isIntersecting }]) => {
-            if (isIntersecting) {
-                getNextDictionaries();
-                intersectionObserver.disconnect();
-            }
-        });
-
-        if (spinnerRef?.current) {
-            intersectionObserver.observe(spinnerRef.current);
-        }
-
-        return () => {
-            intersectionObserver.disconnect();
-        };
-    }, [getNextDictionaries]);
 
     return (
         <div className={styles.root}>
