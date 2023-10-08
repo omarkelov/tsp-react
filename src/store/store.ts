@@ -1,4 +1,4 @@
-import { Action, combineReducers, configureStore, ThunkAction } from '@reduxjs/toolkit';
+import { Action, AnyAction, combineReducers, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import {
     FLUSH,
     PAUSE,
@@ -11,22 +11,32 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
-import authReducer, { LOGIN } from './authSlice';
-import dictionariesReducer from './dictionariesSlice';
+import authReducer, { AUTH_REDUCER_KEY, LOGIN_KEY, logoutAsync } from './authSlice';
+import dictionariesReducer, { DICTIONARIES_REDUCER_KEY } from './dictionariesSlice';
 
-
-const AUTH_REDUCER_KEY = 'auth';
 
 const persistConfig = {
     key: AUTH_REDUCER_KEY,
     storage,
-    whitelist: [LOGIN],
+    whitelist: [LOGIN_KEY],
 };
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
     [AUTH_REDUCER_KEY]: persistReducer(persistConfig, authReducer),
-    dictionaries: dictionariesReducer,
+    [DICTIONARIES_REDUCER_KEY]: dictionariesReducer,
 });
+
+const rootReducer = (state: ReturnType<typeof appReducer> | undefined, action: AnyAction) => {
+    if (action.type === logoutAsync.fulfilled.type && state) {
+        state = {
+            [AUTH_REDUCER_KEY]: {
+                _persist: state[AUTH_REDUCER_KEY]._persist,
+            },
+        } as ReturnType<typeof appReducer>;
+    }
+
+    return appReducer(state, action);
+};
 
 export const store = configureStore({
     reducer: rootReducer,

@@ -5,22 +5,24 @@ import { Credentials, fetchLogin, fetchLogout } from '../api/authAPI';
 import { RootState } from './store';
 
 
-export const LOGIN = 'login';
+export const AUTH_REDUCER_KEY = 'auth';
+export const LOGIN_KEY = 'login';
 
+type Status = 'idle' | 'loading' | 'failed';
 export interface AuthState {
-    status: 'idle' | 'loading' | 'failed';
-    [LOGIN]?: string;
+    status: Status;
+    [LOGIN_KEY]?: string;
     error?: SerializedError;
 }
 
 const initialState: AuthState = {
     status: 'idle',
-    [LOGIN]: undefined,
+    [LOGIN_KEY]: undefined,
     error: undefined,
 };
 
 export const loginAsync = createAsyncThunk<void, Credentials, { rejectValue: { code: number } }>(
-    'auth/fetchLogin',
+    `${AUTH_REDUCER_KEY}/loginAsync`,
     async (credentials, { rejectWithValue }) => {
         const response = await fetchLogin(credentials);
 
@@ -31,7 +33,7 @@ export const loginAsync = createAsyncThunk<void, Credentials, { rejectValue: { c
 );
 
 export const logoutAsync = createAsyncThunk<void, undefined, { rejectValue: { code: number } }>(
-    'auth/fetchLogout',
+    `${AUTH_REDUCER_KEY}/logoutAsync`,
     async (_, { rejectWithValue }) => {
         const response = await fetchLogout();
 
@@ -42,7 +44,7 @@ export const logoutAsync = createAsyncThunk<void, undefined, { rejectValue: { co
 );
 
 export const authSlice = createSlice({
-    name: 'auth',
+    name: AUTH_REDUCER_KEY,
     initialState,
     reducers: {},
     extraReducers: builder =>
@@ -53,7 +55,7 @@ export const authSlice = createSlice({
             })
             .addCase(loginAsync.fulfilled, (state, { meta: { arg: { login } } }) => {
                 state.status = 'idle';
-                state[LOGIN] = login;
+                state[LOGIN_KEY] = login;
             })
             .addCase(loginAsync.rejected, (state, { payload: error }) => {
                 state.status = 'failed';
@@ -65,7 +67,7 @@ export const authSlice = createSlice({
             })
             .addCase(logoutAsync.fulfilled, state => {
                 state.status = 'idle';
-                state[LOGIN] = undefined;
+                state[LOGIN_KEY] = undefined;
             })
             .addCase(logoutAsync.rejected, (state, { payload: error }) => {
                 state.status = 'failed';
@@ -74,7 +76,7 @@ export const authSlice = createSlice({
 });
 
 export const selectStatus = (state: RootState) => state.auth.status;
-export const selectLogin = (state: RootState) => state.auth[LOGIN];
+export const selectLogin = (state: RootState) => state.auth[LOGIN_KEY];
 export const selectError = (state: RootState) => state.auth.error;
 
 export default authSlice.reducer;

@@ -5,6 +5,8 @@ import { Dictionary, fetchDeleteDictionary, fetchDictionaries } from '../api/dic
 import { RootState } from './store';
 
 
+export const DICTIONARIES_REDUCER_KEY = 'dictionaries';
+
 const LIMIT = 25;
 
 type Status = 'idle' | 'loading' | 'failed';
@@ -27,7 +29,7 @@ const initialState: DictionariesState = {
 };
 
 export const getNextDictionariesAsync = createAsyncThunk<Dictionary[], number, { rejectValue: { code: number } }>(
-    'dictionaries/getNextDictionaries',
+    `${DICTIONARIES_REDUCER_KEY}/getNextDictionariesAsync`,
     async (page, { rejectWithValue, signal }) => {
         const response = await fetchDictionaries(page, LIMIT, signal);
 
@@ -40,7 +42,7 @@ export const getNextDictionariesAsync = createAsyncThunk<Dictionary[], number, {
 );
 
 export const deleteDictionaryAsync = createAsyncThunk<void, string, { rejectValue: { code: number } }>(
-    'dictionaries/deleteDictionary',
+    `${DICTIONARIES_REDUCER_KEY}/deleteDictionaryAsync`,
     async (name, { rejectWithValue }) => {
         const response = await fetchDeleteDictionary(name);
 
@@ -51,7 +53,7 @@ export const deleteDictionaryAsync = createAsyncThunk<void, string, { rejectValu
 );
 
 export const dictionariesSlice = createSlice({
-    name: 'dictionaries',
+    name: DICTIONARIES_REDUCER_KEY,
     initialState,
     reducers: {
         resetStatus: state => {
