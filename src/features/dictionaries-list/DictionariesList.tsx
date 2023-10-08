@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from 'react';
+import { FC, useCallback, useEffect, useRef } from 'react';
 
 import Button from '../../components/button/Button';
 import Spinner from '../../components/spinner/Spinner';
@@ -30,6 +30,10 @@ const DictionariesList: FC = () => {
     const spinnerRef = useRef<HTMLDivElement>(null);
     const abortableRef = useRef<Abortable | null>(null);
 
+    const getNextDictionaries = useCallback(() => {
+        abortableRef.current = dispatch(getNextDictionariesAsync(page));
+    }, [page, dispatch]);
+
     useEffect(() => {
         return () => {
             abortableRef.current?.abort();
@@ -40,7 +44,7 @@ const DictionariesList: FC = () => {
     useEffect(() => {
         const intersectionObserver = new IntersectionObserver(([{ isIntersecting }]) => {
             if (isIntersecting) {
-                abortableRef.current = dispatch(getNextDictionariesAsync(page));
+                getNextDictionaries();
                 intersectionObserver.disconnect();
             }
         });
@@ -52,11 +56,7 @@ const DictionariesList: FC = () => {
         return () => {
             intersectionObserver.disconnect();
         };
-    }, [page, dispatch]);
-
-    const getNextDictionaries = () => {
-        abortableRef.current = dispatch(getNextDictionariesAsync(page));
-    };
+    }, [getNextDictionaries]);
 
     return (
         <div className={styles.root}>
