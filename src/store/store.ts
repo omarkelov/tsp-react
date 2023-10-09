@@ -11,8 +11,9 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
-import authReducer, { AUTH_REDUCER_KEY, LOGIN_KEY, logoutAsync } from './authSlice';
+import authReducer, { AUTH_REDUCER_KEY, isLogoutAction, LOGIN_KEY } from './authSlice';
 import dictionariesReducer, { DICTIONARIES_REDUCER_KEY } from './dictionariesSlice';
+import { listenerMiddleware } from './listenerMiddleware';
 
 
 const persistConfig = {
@@ -27,7 +28,7 @@ const appReducer = combineReducers({
 });
 
 const rootReducer = (state: ReturnType<typeof appReducer> | undefined, action: AnyAction) => {
-    if (action.type === logoutAsync.fulfilled.type && state) {
+    if (state && isLogoutAction(action)) { // TODO: history
         state = {
             [AUTH_REDUCER_KEY]: {
                 _persist: state[AUTH_REDUCER_KEY]._persist,
@@ -45,7 +46,7 @@ export const store = configureStore({
             serializableCheck: {
                 ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
             },
-        }),
+        }).prepend(listenerMiddleware.middleware),
 });
 
 export const persistor = persistStore(store);

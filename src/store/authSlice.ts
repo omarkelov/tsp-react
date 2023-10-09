@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
+import { AnyAction, createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
 
 import { Credentials, fetchLogin, fetchLogout } from '../api/authAPI';
 
@@ -46,7 +46,12 @@ export const logoutAsync = createAsyncThunk<void, undefined, { rejectValue: { co
 export const authSlice = createSlice({
     name: AUTH_REDUCER_KEY,
     initialState,
-    reducers: {},
+    reducers: {
+        logout: state => {
+            state.status = 'idle';
+            state[LOGIN_KEY] = undefined;
+        },
+    },
     extraReducers: builder =>
         builder
             .addCase(loginAsync.pending, state => {
@@ -74,6 +79,11 @@ export const authSlice = createSlice({
                 state.error = error as SerializedError; // TODO: fix
             }),
 });
+
+export const { logout } = authSlice.actions;
+
+const logoutTypes = [logoutAsync.fulfilled.type, logout.type] as const;
+export const isLogoutAction = (action: AnyAction) => logoutTypes.includes(action.type);
 
 export const selectStatus = (state: RootState) => state.auth.status;
 export const selectLogin = (state: RootState) => state.auth[LOGIN_KEY];
