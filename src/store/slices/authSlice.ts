@@ -1,16 +1,16 @@
 import { AnyAction, createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
 
 import { Credentials, fetchLogin, fetchLogout } from '../../api/authAPI';
-import { ResponseError } from '../../util/types';
+import { LoadingStatus, ResponseError } from '../../util/types';
 import { RootState } from '../store';
 
 
 export const AUTH_REDUCER_KEY = 'auth';
 export const LOGIN_KEY = 'login';
 
-type Status = 'idle' | 'loading' | 'failed';
+
 export interface AuthState {
-    status: Status;
+    status: LoadingStatus;
     [LOGIN_KEY]?: string;
     error?: ResponseError | SerializedError;
 }

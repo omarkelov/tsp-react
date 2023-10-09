@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { Dictionary, fetchDeleteDictionary, fetchDictionaries } from '../../api/dictionariesAPI';
-import { ResponseError } from '../../util/types';
+import { LoadingStatus, ResponseError } from '../../util/types';
 import { RootState } from '../store';
 
 
@@ -9,11 +9,10 @@ export const DICTIONARIES_REDUCER_KEY = 'dictionaries';
 
 const LIMIT = 25;
 
-type Status = 'idle' | 'loading' | 'failed';
 type DeletionStatus = 'deleting' | 'deleted';
 
 export interface DictionariesState {
-    status: Status;
+    status: LoadingStatus;
     dictionaries: Dictionary[];
     hasMore: boolean;
     page: number;
