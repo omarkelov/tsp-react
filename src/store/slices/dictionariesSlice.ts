@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { Dictionary, fetchDeleteDictionary, fetchDictionaries } from '../../api/dictionariesAPI';
+import { ResponseError } from '../../util/types';
 import { RootState } from '../store';
 
 
@@ -27,26 +28,26 @@ const initialState: DictionariesState = {
     deletionStatusByDictionaryName: {},
 };
 
-export const getNextDictionariesAsync = createAsyncThunk<Dictionary[], number, { rejectValue: { code: number } }>(
+export const getNextDictionariesAsync = createAsyncThunk<Dictionary[], number, { rejectValue: ResponseError }>(
     `${DICTIONARIES_REDUCER_KEY}/getNextDictionariesAsync`,
     async (page, { rejectWithValue, signal }) => {
         const response = await fetchDictionaries(page, LIMIT, signal);
 
         if (!response.ok) {
-            return rejectWithValue({ code: response.status }); // TODO: handle
+            return rejectWithValue({ code: response.status });
         }
 
         return response.json();
     }
 );
 
-export const deleteDictionaryAsync = createAsyncThunk<void, string, { rejectValue: { code: number } }>(
+export const deleteDictionaryAsync = createAsyncThunk<void, string, { rejectValue: ResponseError }>(
     `${DICTIONARIES_REDUCER_KEY}/deleteDictionaryAsync`,
     async (name, { rejectWithValue }) => {
         const response = await fetchDeleteDictionary(name);
 
         if (!response.ok) {
-            return rejectWithValue({ code: response.status }); // TODO: handle
+            return rejectWithValue({ code: response.status });
         }
     }
 );

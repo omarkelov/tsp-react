@@ -1,6 +1,7 @@
 import { AnyAction, createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
 
 import { Credentials, fetchLogin, fetchLogout } from '../../api/authAPI';
+import { ResponseError } from '../../util/types';
 import { RootState } from '../store';
 
 
@@ -11,7 +12,7 @@ type Status = 'idle' | 'loading' | 'failed';
 export interface AuthState {
     status: Status;
     [LOGIN_KEY]?: string;
-    error?: SerializedError;
+    error?: ResponseError | SerializedError;
 }
 
 const initialState: AuthState = {
@@ -20,7 +21,7 @@ const initialState: AuthState = {
     error: undefined,
 };
 
-export const loginAsync = createAsyncThunk<void, Credentials, { rejectValue: { code: number } }>(
+export const loginAsync = createAsyncThunk<void, Credentials, { rejectValue: ResponseError }>(
     `${AUTH_REDUCER_KEY}/loginAsync`,
     async (credentials, { rejectWithValue }) => {
         const response = await fetchLogin(credentials);
@@ -31,7 +32,7 @@ export const loginAsync = createAsyncThunk<void, Credentials, { rejectValue: { c
     }
 );
 
-export const logoutAsync = createAsyncThunk<void, undefined, { rejectValue: { code: number } }>(
+export const logoutAsync = createAsyncThunk<void, undefined, { rejectValue: ResponseError }>(
     `${AUTH_REDUCER_KEY}/logoutAsync`,
     async (_, { rejectWithValue }) => {
         const response = await fetchLogout();
@@ -61,9 +62,9 @@ export const authSlice = createSlice({
                 state.status = 'idle';
                 state[LOGIN_KEY] = login;
             })
-            .addCase(loginAsync.rejected, (state, { payload: error }) => {
+            .addCase(loginAsync.rejected, (state, { payload: responseError, error }) => {
                 state.status = 'failed';
-                state.error = error as SerializedError; // TODO: fix
+                state.error = responseError ?? error;
             })
             .addCase(logoutAsync.pending, state => {
                 state.status = 'loading';
@@ -73,9 +74,9 @@ export const authSlice = createSlice({
                 state.status = 'idle';
                 state[LOGIN_KEY] = undefined;
             })
-            .addCase(logoutAsync.rejected, (state, { payload: error }) => {
+            .addCase(logoutAsync.rejected, (state, { payload: responseError, error }) => {
                 state.status = 'failed';
-                state.error = error as SerializedError; // TODO: fix
+                state.error = responseError ?? error;
             }),
 });
 
