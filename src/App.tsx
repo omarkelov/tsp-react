@@ -4,7 +4,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import NavigationBar from './features/navigation-bar/NavigationBar';
 import { PageRoute, privateRoutes, publicRoutes } from './routes';
-import { selectLogin } from './store/authSlice';
+import { selectLogin } from './store/slices/authSlice';
 import styles from './styles/App.module.scss';
 
 

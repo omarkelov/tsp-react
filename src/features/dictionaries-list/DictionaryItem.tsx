@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 
 import { Dictionary } from '../../api/dictionariesAPI';
 import SlideUp from '../../components/slide-up/SlideUp';
-import { deleteDictionary, deleteDictionaryAsync } from '../../store/dictionariesSlice';
 import { useAppDispatch } from '../../store/hooks';
+import { deleteDictionary, deleteDictionaryAsync } from '../../store/slices/dictionariesSlice';
 import { combineClassNames } from '../../util/classNames';
 
 import styles from './DictionaryItem.module.scss';

@@ -4,6 +4,7 @@ import Button from '../../components/button/Button';
 import Spinner from '../../components/spinner/Spinner';
 import { useAbortOnUnmount } from '../../hooks/abortOnUnmount';
 import { useIntersectionObserver } from '../../hooks/intersectionObserver';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
     getNextDictionariesAsync,
     resetStatus,
@@ -12,8 +13,7 @@ import {
     selectHasMore,
     selectPage,
     selectStatus,
-} from '../../store/dictionariesSlice';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
+} from '../../store/slices/dictionariesSlice';
 
 import styles from './DictionariesList.module.scss';
 import DictionaryItem from './DictionaryItem';

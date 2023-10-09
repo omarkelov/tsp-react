@@ -1,8 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { Dictionary, fetchDeleteDictionary, fetchDictionaries } from '../api/dictionariesAPI';
-
-import { RootState } from './store';
+import { Dictionary, fetchDeleteDictionary, fetchDictionaries } from '../../api/dictionariesAPI';
+import { RootState } from '../store';
 
 
 export const DICTIONARIES_REDUCER_KEY = 'dictionaries';

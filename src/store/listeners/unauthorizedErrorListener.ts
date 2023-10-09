@@ -1,5 +1,5 @@
-import { logout } from '../authSlice';
 import { AppStartListening } from '../listenerMiddleware';
+import { logout } from '../slices/authSlice';
 
 
 export const setupUnauthorizedErrorListener = (startListening: AppStartListening) => startListening({

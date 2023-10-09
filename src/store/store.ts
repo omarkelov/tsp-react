@@ -11,9 +11,9 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
-import authReducer, { AUTH_REDUCER_KEY, isLogoutAction, LOGIN_KEY } from './authSlice';
-import dictionariesReducer, { DICTIONARIES_REDUCER_KEY } from './dictionariesSlice';
 import { listenerMiddleware } from './listenerMiddleware';
+import authReducer, { AUTH_REDUCER_KEY, isLogoutAction, LOGIN_KEY } from './slices/authSlice';
+import dictionariesReducer, { DICTIONARIES_REDUCER_KEY } from './slices/dictionariesSlice';
 
 
 const persistConfig = {

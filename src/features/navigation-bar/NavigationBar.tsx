@@ -2,8 +2,8 @@ import { FC } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { logoutAsync, selectLogin } from '../../store/authSlice';
 import { useAppDispatch } from '../../store/hooks';
+import { logoutAsync, selectLogin } from '../../store/slices/authSlice';
 
 import styles from './NavigationBar.module.scss';
 

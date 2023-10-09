@@ -3,8 +3,8 @@ import { FC, useRef } from 'react';
 import Button from '../../components/button/Button';
 import Form from '../../components/form/Form';
 import FormInput from '../../components/form-input/FormInput';
-import { loginAsync } from '../../store/authSlice';
 import { useAppDispatch } from '../../store/hooks';
+import { loginAsync } from '../../store/slices/authSlice';
 
 import styles from './LoginForm.module.scss';
 

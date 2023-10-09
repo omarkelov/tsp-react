@@ -1,8 +1,7 @@
 import { AnyAction, createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
 
-import { Credentials, fetchLogin, fetchLogout } from '../api/authAPI';
-
-import { RootState } from './store';
+import { Credentials, fetchLogin, fetchLogout } from '../../api/authAPI';
+import { RootState } from '../store';
 
 
 export const AUTH_REDUCER_KEY = 'auth';
