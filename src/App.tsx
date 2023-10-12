@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import NavigationBar from './features/navigation-bar/NavigationBar';
+import NotificationsList from './features/notifications/NotificationsList';
 import { PageRoute, privateRoutes, publicRoutes } from './routes';
 import { selectLogin } from './store/slices/authSlice';
 import styles from './styles/App.module.scss';
@@ -35,6 +36,7 @@ const App: FC = () => {
                     <Route path='*' element={<Navigate to='/login' replace />} />
                 </Routes>
             )}
+            <NotificationsList />
         </BrowserRouter>
     );
 };

@@ -14,6 +14,7 @@ import storage from 'redux-persist/lib/storage';
 import { listenerMiddleware } from './listenerMiddleware';
 import authReducer, { AUTH_REDUCER_KEY, isLogoutAction, LOGIN_KEY } from './slices/authSlice';
 import dictionariesReducer, { DICTIONARIES_REDUCER_KEY } from './slices/dictionariesSlice';
+import notificationsReducer, { NOTIFICATIONS_REDUCER_KEY } from './slices/notificationsSlice';
 
 
 const persistConfig = {
@@ -25,6 +26,7 @@ const persistConfig = {
 const appReducer = combineReducers({
     [AUTH_REDUCER_KEY]: persistReducer(persistConfig, authReducer),
     [DICTIONARIES_REDUCER_KEY]: dictionariesReducer,
+    [NOTIFICATIONS_REDUCER_KEY]: notificationsReducer,
 });
 
 const rootReducer = (state: ReturnType<typeof appReducer> | undefined, action: AnyAction) => {
