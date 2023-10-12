@@ -2,8 +2,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { RootState } from '../store';
 
-import { deleteDictionaryAsync } from './dictionariesSlice';
-
 
 export const NOTIFICATIONS_REDUCER_KEY = 'notifications';
 
@@ -37,15 +35,6 @@ export const notificationsSlice = createSlice({
             state.notifications = [];
         },
     },
-    extraReducers: builder =>
-        builder
-            .addCase(deleteDictionaryAsync.rejected, (state, { meta: { arg: name, requestId: id }, payload: responseError, error }) => {
-                state.notifications.push({
-                    id,
-                    type: 'error',
-                    message: `Could not delete dictionary "${name}": ${responseError ? `server responded with ${responseError.code} code` : `${error.name} ${error?.message ? `(${error.message})` : ''}`}.`,
-                });
-            }),
 });
 
 export const { addNotification, deleteNotification, deleteAllNotifications } = notificationsSlice.actions;
