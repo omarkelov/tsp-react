@@ -1,15 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { fetchDeleteMovie, fetchMovies, Movie } from '../../api/moviesAPI';
-import { LoadingStatus, ResponseError } from '../../util/types';
+import { fetchDeleteMovie, fetchMovies } from '../../api/moviesAPI';
+import { DeletionStatus, LoadingStatus, Movie, ResponseError } from '../../util/types';
 import { RootState } from '../store';
 
 
 export const MOVIES_REDUCER_KEY = 'movies';
 
 const LIMIT = 25;
-
-type DeletionStatus = 'deleting' | 'deleted';
 
 export interface MoviesState {
     status: LoadingStatus;

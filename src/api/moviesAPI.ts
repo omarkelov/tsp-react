@@ -1,11 +1,6 @@
 import { MOVIES_ADDRESS } from './constants';
 
 
-export interface Movie {
-    id: number;
-    videoFilePath: string;
-}
-
 export const fetchMovies = (page: number, limit: number, signal: AbortSignal) =>
     fetch(`${MOVIES_ADDRESS}?page=${page}&limit=${limit}`, {
         credentials: 'include',

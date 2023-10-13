@@ -1,11 +1,11 @@
 import { FC, memo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Dictionary } from '../../api/dictionariesAPI';
 import SlideUp from '../../components/slide-up/SlideUp';
 import { useAppDispatch } from '../../store/hooks';
 import { deleteDictionary, deleteDictionaryAsync } from '../../store/slices/dictionariesSlice';
 import { combineClassNames } from '../../util/classNames';
+import { Dictionary } from '../../util/types';
 
 import styles from './DictionaryItem.module.scss';
 

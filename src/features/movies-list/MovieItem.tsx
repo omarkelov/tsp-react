@@ -1,11 +1,11 @@
 import { FC, memo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Movie } from '../../api/moviesAPI';
 import SlideUp from '../../components/slide-up/SlideUp';
 import { useAppDispatch } from '../../store/hooks';
 import { deleteMovie, deleteMovieAsync } from '../../store/slices/moviesSlice';
 import { combineClassNames } from '../../util/classNames';
+import { Movie } from '../../util/types';
 
 import styles from './MovieItem.module.scss';
 
