@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { fetchDeleteMovie, fetchMovies } from '../../api/movieAPI';
+import { fetchDeleteMovie, fetchGetMovies } from '../../api/movieAPI';
 import { DeletionStatus, LoadingStatus, Movie, ResponseError } from '../../util/types';
 import { RootState } from '../store';
 
@@ -28,7 +28,7 @@ const initialState: MoviesState = {
 export const getNextMoviesAsync = createAsyncThunk<Movie[], number, { rejectValue: ResponseError }>(
     `${MOVIES_REDUCER_KEY}/getNextMoviesAsync`,
     async (page, { rejectWithValue, signal }) => {
-        const response = await fetchMovies(page, LIMIT, signal);
+        const response = await fetchGetMovies(page, LIMIT, signal);
 
         if (!response.ok) {
             return rejectWithValue({ code: response.status });
