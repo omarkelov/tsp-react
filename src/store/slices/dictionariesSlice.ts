@@ -99,10 +99,10 @@ export const dictionariesSlice = createSlice({
 
 export const { resetStatus, deleteDictionary } = dictionariesSlice.actions;
 
-export const selectStatus = (state: RootState) => state.dictionaries.status;
-export const selectDictionaries = (state: RootState) => state.dictionaries.dictionaries;
-export const selectHasMore = (state: RootState) => state.dictionaries.hasMore;
-export const selectPage = (state: RootState) => state.dictionaries.page;
-export const selectDeletionStatusByDictionaryName = (state: RootState) => state.dictionaries.deletionStatusByDictionaryName;
+export const selectStatus = (state: RootState) => state[DICTIONARIES_REDUCER_KEY].status;
+export const selectDictionaries = (state: RootState) => state[DICTIONARIES_REDUCER_KEY].dictionaries;
+export const selectHasMore = (state: RootState) => state[DICTIONARIES_REDUCER_KEY].hasMore;
+export const selectPage = (state: RootState) => state[DICTIONARIES_REDUCER_KEY].page;
+export const selectDeletionStatusByDictionaryName = (state: RootState) => state[DICTIONARIES_REDUCER_KEY].deletionStatusByDictionaryName;
 
 export default dictionariesSlice.reducer;

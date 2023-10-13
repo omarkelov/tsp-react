@@ -85,8 +85,8 @@ export const { logout } = authSlice.actions;
 const logoutTypes = [logoutAsync.fulfilled.type, logout.type] as const;
 export const isLogoutAction = (action: AnyAction) => logoutTypes.includes(action.type);
 
-export const selectStatus = (state: RootState) => state.auth.status;
-export const selectLogin = (state: RootState) => state.auth[LOGIN_KEY];
-export const selectError = (state: RootState) => state.auth.error;
+export const selectStatus = (state: RootState) => state[AUTH_REDUCER_KEY].status;
+export const selectLogin = (state: RootState) => state[AUTH_REDUCER_KEY][LOGIN_KEY];
+export const selectError = (state: RootState) => state[AUTH_REDUCER_KEY].error;
 
 export default authSlice.reducer;
