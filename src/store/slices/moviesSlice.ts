@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { fetchDeleteMovie, fetchMovies } from '../../api/moviesAPI';
+import { fetchDeleteMovie, fetchMovies } from '../../api/movieAPI';
 import { DeletionStatus, LoadingStatus, Movie, ResponseError } from '../../util/types';
 import { RootState } from '../store';
 

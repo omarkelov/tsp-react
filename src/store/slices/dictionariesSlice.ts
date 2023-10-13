@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { fetchDeleteDictionary, fetchDictionaries } from '../../api/dictionariesAPI';
+import { fetchDeleteDictionary, fetchDictionaries } from '../../api/dictionaryAPI';
 import { DeletionStatus, Dictionary, LoadingStatus, ResponseError } from '../../util/types';
 import { RootState } from '../store';
 
