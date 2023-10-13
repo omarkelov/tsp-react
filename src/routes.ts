@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 import DictionariesPage from './pages/dictionaries/DictionariesPage';
-import DictionaryPage from './pages/DictionaryPage';
+import DictionaryPage from './pages/dictionary/DictionaryPage';
 import LoginPage from './pages/login/LoginPage';
 import MoviePage from './pages/MoviePage';
 import MoviesPage from './pages/movies/MoviesPage';

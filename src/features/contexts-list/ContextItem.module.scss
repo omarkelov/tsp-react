@@ -1,0 +1,43 @@
+.context {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+
+    .link {
+        color: #b8b7b4;
+
+        &:visited {
+            color: #b8b7b4;
+        }
+
+        &:hover {
+            color: #f0ece9;
+        }
+    }
+
+    .removeButton {
+        visibility: hidden;
+        display: inline-block;
+        margin: 0 3px;
+        width: 16px;
+        height: 16px;
+        background: url("/images/delete-cross.png");
+        cursor: pointer;
+    }
+
+    &:hover {
+        .removeButton {
+            visibility: visible;
+        }
+    }
+
+    &.mContextDeleting {
+        opacity: 0.5;
+        cursor: wait;
+
+        .link, .removeButton {
+            pointer-events: none;
+        }
+    }
+}
