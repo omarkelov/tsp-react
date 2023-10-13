@@ -1,9 +1,5 @@
-import { FC, useCallback, useEffect } from 'react';
+import { FC, useCallback } from 'react';
 
-import Button from '../../components/button/Button';
-import Spinner from '../../components/spinner/Spinner';
-import { useAbortOnUnmount } from '../../hooks/abortOnUnmount';
-import { useIntersectionObserver } from '../../hooks/intersectionObserver';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
     getNextDictionariesAsync,
@@ -14,8 +10,8 @@ import {
     selectPage,
     selectStatus,
 } from '../../store/slices/dictionariesSlice';
+import InfiniteList from '../infinite-list/InfiniteList';
 
-import styles from './DictionariesList.module.scss';
 import DictionaryItem from './DictionaryItem';
 
 
@@ -28,42 +24,31 @@ const DictionariesList: FC = () => {
     const page = useAppSelector(selectPage);
     const deletionStatusByDictionaryName = useAppSelector(selectDeletionStatusByDictionaryName);
 
-    const setAbortCallback = useAbortOnUnmount();
-    const getNextDictionaries = useCallback(() => {
-        setAbortCallback(dispatch(getNextDictionariesAsync(page)));
-    }, [page, dispatch, setAbortCallback]);
-    const spinnerRef = useIntersectionObserver<HTMLDivElement>(getNextDictionaries);
+    const dispatchGetNextDictionariesAsync = useCallback(
+        (page: number) => dispatch(getNextDictionariesAsync(page)),
+        [dispatch]
+    );
 
-    useEffect(() => () => {
-        dispatch(resetStatus());
-    }, [dispatch]);
+    const dispatchResetStatus = useCallback(() => dispatch(resetStatus()), [dispatch]);
 
     return (
-        <div className={styles.root}>
-            <ul className={styles.dictionaries}>
-                {!!dictionaries.length && dictionaries.map(dictionary => (
-                    <DictionaryItem
-                        key={dictionary.name}
-                        dictionary={dictionary}
-                        isDeleting={deletionStatusByDictionaryName[dictionary.name] === 'deleting'}
-                        isDeleted={deletionStatusByDictionaryName[dictionary.name] === 'deleted'}
-                    />
-                ))}
-            </ul>
-            {hasMore && (
-                <div className={styles.loadingRoot}>
-                    {status === 'failed'
-                        ? (
-                            <div className={styles.loadingFailed}>
-                                <span>{`Failed to load ${page ? 'more' : ''} dictionaries`}</span>
-                                <Button value='Try again' onClick={getNextDictionaries} />
-                            </div>
-                        )
-                        : <Spinner ref={spinnerRef} />
-                    }
-                </div>
-            )}
-        </div>
+        <InfiniteList
+            entitiesName={'dictionaries'}
+            status={status}
+            hasMore={hasMore}
+            page={page}
+            dispatchGetNextEntitiesAsync={dispatchGetNextDictionariesAsync}
+            dispatchResetStatus={dispatchResetStatus}
+        >
+            {!!dictionaries.length && dictionaries.map(dictionary => (
+                <DictionaryItem
+                    key={dictionary.name}
+                    dictionary={dictionary}
+                    isDeleting={deletionStatusByDictionaryName[dictionary.name] === 'deleting'}
+                    isDeleted={deletionStatusByDictionaryName[dictionary.name] === 'deleted'}
+                />
+            ))}
+        </InfiniteList>
     );
 };
 
