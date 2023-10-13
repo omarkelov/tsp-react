@@ -10,6 +10,7 @@ export const CONTEXTS_REDUCER_KEY = 'contexts';
 const LIMIT = 25;
 
 export interface ContextsState {
+    dictionaryName: string;
     status: LoadingStatus;
     contexts: Context[];
     hasMore: boolean;
@@ -18,6 +19,7 @@ export interface ContextsState {
 }
 
 const initialState: ContextsState = {
+    dictionaryName: '',
     status: 'idle',
     contexts: [],
     hasMore: true,
@@ -25,13 +27,10 @@ const initialState: ContextsState = {
     deletionStatusByContextId: {},
 };
 
-export const getNextContextsAsync = createAsyncThunk<
-    Context[],
-    { dictionaryName: string, page: number },
-    { rejectValue: ResponseError }
->(
+export const getNextContextsAsync = createAsyncThunk<Context[], number, { rejectValue: ResponseError }>(
     `${CONTEXTS_REDUCER_KEY}/getNextContextsAsync`,
-    async ({ dictionaryName, page }, { rejectWithValue, signal }) => {
+    async (page, { getState, rejectWithValue, signal }) => {
+        const { dictionaryName } = (getState() as RootState)[CONTEXTS_REDUCER_KEY];
         const response = await fetchGetContexts(dictionaryName, page, LIMIT, signal);
 
         if (!response.ok) {
@@ -57,6 +56,10 @@ export const contextsSlice = createSlice({
     name: CONTEXTS_REDUCER_KEY,
     initialState,
     reducers: {
+        initialize: (_, { payload: dictionaryName }: { payload: string }) => ({
+            ...initialState,
+            dictionaryName,
+        }),
         resetStatus: state => {
             state.status = 'idle';
         },
@@ -101,8 +104,9 @@ export const contextsSlice = createSlice({
             }),
 });
 
-export const { resetStatus, deleteContext } = contextsSlice.actions;
+export const { initialize, resetStatus, deleteContext } = contextsSlice.actions;
 
+export const selectDictionaryName = (state: RootState) => state[CONTEXTS_REDUCER_KEY].dictionaryName;
 export const selectStatus = (state: RootState) => state[CONTEXTS_REDUCER_KEY].status;
 export const selectContexts = (state: RootState) => state[CONTEXTS_REDUCER_KEY].contexts;
 export const selectHasMore = (state: RootState) => state[CONTEXTS_REDUCER_KEY].hasMore;

@@ -1,11 +1,13 @@
-import { FC, useCallback } from 'react';
+import { FC, useCallback, useEffect } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
     getNextContextsAsync,
+    initialize,
     resetStatus,
     selectContexts,
     selectDeletionStatusByContextId,
+    selectDictionaryName,
     selectHasMore,
     selectPage,
     selectStatus,
@@ -20,15 +22,22 @@ const ContextsList: FC<{
 }> = ({ dictionaryName }) => {
     const dispatch = useAppDispatch();
 
+    const savedDictionaryName = useAppSelector(selectDictionaryName);
     const status = useAppSelector(selectStatus);
     const contexts = useAppSelector(selectContexts);
     const hasMore = useAppSelector(selectHasMore);
     const page = useAppSelector(selectPage);
     const deletionStatusByContextId = useAppSelector(selectDeletionStatusByContextId);
 
+    useEffect(() => {
+        if (dictionaryName !== savedDictionaryName) {
+            dispatch(initialize(dictionaryName));
+        }
+    }, [dictionaryName, savedDictionaryName, dispatch]);
+
     const dispatchGetNextContextsAsync = useCallback(
-        (page: number) => dispatch(getNextContextsAsync({ dictionaryName, page })),
-        [dictionaryName, dispatch]
+        (page: number) => dispatch(getNextContextsAsync(page)),
+        [dispatch]
     );
 
     const dispatchResetStatus = useCallback(() => dispatch(resetStatus()), [dispatch]);
