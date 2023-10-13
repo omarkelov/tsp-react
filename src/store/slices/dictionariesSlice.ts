@@ -68,12 +68,6 @@ export const dictionariesSlice = createSlice({
             })
             .addCase(getNextDictionariesAsync.fulfilled, (state, { payload: extraDictionaries }) => {
                 state.status = 'idle';
-
-                if (!extraDictionaries.length) {
-                    state.hasMore = false;
-                    return;
-                }
-
                 state.dictionaries.push(...extraDictionaries);
                 state.page++;
 

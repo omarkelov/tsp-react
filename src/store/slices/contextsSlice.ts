@@ -75,12 +75,6 @@ export const contextsSlice = createSlice({
             })
             .addCase(getNextContextsAsync.fulfilled, (state, { payload: extraContexts }) => {
                 state.status = 'idle';
-
-                if (!extraContexts.length) {
-                    state.hasMore = false;
-                    return;
-                }
-
                 state.contexts.push(...extraContexts);
                 state.page++;
 

@@ -68,12 +68,6 @@ export const moviesSlice = createSlice({
             })
             .addCase(getNextMoviesAsync.fulfilled, (state, { payload: extraMovies }) => {
                 state.status = 'idle';
-
-                if (!extraMovies.length) {
-                    state.hasMore = false;
-                    return;
-                }
-
                 state.movies.push(...extraMovies);
                 state.page++;
 
