@@ -1,9 +1,5 @@
-import { FC, useCallback, useEffect } from 'react';
+import { FC, useCallback } from 'react';
 
-import Button from '../../components/button/Button';
-import Spinner from '../../components/spinner/Spinner';
-import { useAbortOnUnmount } from '../../hooks/abortOnUnmount';
-import { useIntersectionObserver } from '../../hooks/intersectionObserver';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
     getNextMoviesAsync,
@@ -14,9 +10,9 @@ import {
     selectPage,
     selectStatus,
 } from '../../store/slices/moviesSlice';
+import InfiniteList from '../infinite-list/InfiniteList';
 
 import MovieItem from './MovieItem';
-import styles from './MoviesList.module.scss';
 
 
 const MoviesList: FC = () => {
@@ -28,42 +24,31 @@ const MoviesList: FC = () => {
     const page = useAppSelector(selectPage);
     const deletionStatusByMovieId = useAppSelector(selectDeletionStatusByMovieId);
 
-    const setAbortCallback = useAbortOnUnmount();
-    const getNextMovies = useCallback(() => {
-        setAbortCallback(dispatch(getNextMoviesAsync(page)));
-    }, [page, dispatch, setAbortCallback]);
-    const spinnerRef = useIntersectionObserver<HTMLDivElement>(getNextMovies);
+    const dispatchGetNextMoviesAsync = useCallback(
+        (page: number) => dispatch(getNextMoviesAsync(page)),
+        [dispatch]
+    );
 
-    useEffect(() => () => {
-        dispatch(resetStatus());
-    }, [dispatch]);
+    const dispatchResetStatus = useCallback(() => dispatch(resetStatus()), [dispatch]);
 
     return (
-        <div className={styles.root}>
-            <ul className={styles.movies}>
-                {!!movies.length && movies.map(movie => (
-                    <MovieItem
-                        key={movie.id}
-                        movie={movie}
-                        isDeleting={deletionStatusByMovieId[movie.id] === 'deleting'}
-                        isDeleted={deletionStatusByMovieId[movie.id] === 'deleted'}
-                    />
-                ))}
-            </ul>
-            {hasMore && (
-                <div className={styles.loadingRoot}>
-                    {status === 'failed'
-                        ? (
-                            <div className={styles.loadingFailed}>
-                                <span>{`Failed to load ${page ? 'more' : ''} movies`}</span>
-                                <Button value='Try again' onClick={getNextMovies} />
-                            </div>
-                        )
-                        : <Spinner ref={spinnerRef} />
-                    }
-                </div>
-            )}
-        </div>
+        <InfiniteList
+            entitiesName={'movies'}
+            status={status}
+            hasMore={hasMore}
+            page={page}
+            dispatchGetNextEntitiesAsync={dispatchGetNextMoviesAsync}
+            dispatchResetStatus={dispatchResetStatus}
+        >
+            {!!movies.length && movies.map(movie => (
+                <MovieItem
+                    key={movie.id}
+                    movie={movie}
+                    isDeleting={deletionStatusByMovieId[movie.id] === 'deleting'}
+                    isDeleted={deletionStatusByMovieId[movie.id] === 'deleted'}
+                />
+            ))}
+        </InfiniteList>
     );
 };
 
