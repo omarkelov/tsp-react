@@ -4,6 +4,8 @@ import { fetchDeleteContext, fetchGetContexts } from '../../api/contextAPI';
 import { Context, DeletionStatus, LoadingStatus, ResponseError } from '../../util/types';
 import { RootState } from '../store';
 
+import { addNotification } from './notificationsSlice';
+
 
 export const CONTEXTS_REDUCER_KEY = 'contexts';
 
@@ -29,8 +31,19 @@ const initialState: ContextsState = {
 
 export const getNextContextsAsync = createAsyncThunk<Context[], number, { rejectValue: ResponseError }>(
     `${CONTEXTS_REDUCER_KEY}/getNextContextsAsync`,
-    async (page, { getState, rejectWithValue, signal }) => {
+    async (page, { getState, dispatch, rejectWithValue, requestId, signal }) => {
         const { dictionaryName } = (getState() as RootState)[CONTEXTS_REDUCER_KEY];
+
+        if (!dictionaryName.length) {
+            dispatch(addNotification({
+                id: requestId,
+                type: 'error',
+                message: `Internal error has ocurred. Try to reload the page.`,
+            }));
+
+            return Promise.reject();
+        }
+
         const response = await fetchGetContexts(dictionaryName, page, LIMIT, signal);
 
         if (!response.ok) {
@@ -83,7 +96,7 @@ export const contextsSlice = createSlice({
                 }
             })
             .addCase(getNextContextsAsync.rejected, state => {
-                if (state.status === 'loading') {
+                if (state.status === 'loading' || !state.dictionaryName.length) {
                     state.status = 'failed';
                 }
             })
