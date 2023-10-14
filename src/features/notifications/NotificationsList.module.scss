@@ -6,12 +6,12 @@
     gap: 8px;
     align-items: end;
     right: 15px;
-    width: 220px;
 
     .notifications {
         display: flex;
         flex-direction: column;
         gap: 8px;
+        width: 220px;
         margin: 0;
         padding: 0;
     }
