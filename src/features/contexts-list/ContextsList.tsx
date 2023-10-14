@@ -48,6 +48,7 @@ const ContextsList: FC<{
             status={status}
             hasMore={hasMore}
             page={page}
+            isEnumerated
             dispatchGetNextEntitiesAsync={dispatchGetNextContextsAsync}
             dispatchResetStatus={dispatchResetStatus}
         >
