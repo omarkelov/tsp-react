@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { fetchDeleteContext, fetchGetContexts } from '../../api/contextAPI';
+import { fetchDeleteContext, fetchGetContexts, fetchGetPhrasesCount } from '../../api/contextAPI';
 import { Context, DeletionStatus, LoadingStatus, ResponseError } from '../../util/types';
 import { RootState } from '../store';
 
@@ -13,6 +13,7 @@ const LIMIT = 25;
 
 export interface ContextsState {
     dictionaryName: string;
+    phrasesCount: number | undefined;
     status: LoadingStatus;
     contexts: Context[];
     hasMore: boolean;
@@ -22,12 +23,35 @@ export interface ContextsState {
 
 const initialState: ContextsState = {
     dictionaryName: '',
+    phrasesCount: undefined,
     status: 'idle',
     contexts: [],
     hasMore: true,
     page: 0,
     deletionStatusByContextId: {},
 };
+
+export const getPhrasesCountAsync = createAsyncThunk<number, void, { rejectValue: ResponseError }>(
+    `${CONTEXTS_REDUCER_KEY}/getPhrasesCountAsync`,
+    async (_, { getState, rejectWithValue, signal }) => {
+        const { dictionaryName } = (getState() as RootState)[CONTEXTS_REDUCER_KEY];
+        const response = await fetchGetPhrasesCount(dictionaryName, signal);
+
+        if (!response.ok) {
+            return rejectWithValue({ code: response.status });
+        }
+
+        return response.json();
+    }, {
+        condition: (_, { getState }) => {
+            const { dictionaryName } = (getState() as RootState)[CONTEXTS_REDUCER_KEY];
+
+            if (!dictionaryName.length) {
+                return false;
+            }
+        },
+    }
+);
 
 export const getNextContextsAsync = createAsyncThunk<Context[], number, { rejectValue: ResponseError }>(
     `${CONTEXTS_REDUCER_KEY}/getNextContextsAsync`,
@@ -77,12 +101,18 @@ export const contextsSlice = createSlice({
             state.status = 'idle';
         },
         deleteContext: (state, { payload: id }: { payload: number }) => {
+            if (state.phrasesCount !== undefined) {
+                state.phrasesCount -= state.contexts.find(c => c.id === id)?.phrases?.length ?? 0;
+            }
             state.contexts = state.contexts.filter(c => c.id !== id);
             delete state.deletionStatusByContextId[id];
         },
     },
     extraReducers: builder =>
         builder
+            .addCase(getPhrasesCountAsync.fulfilled, (state, { payload: phrasesCount }) => {
+                state.phrasesCount = phrasesCount;
+            })
             .addCase(getNextContextsAsync.pending, state => {
                 state.status = 'loading';
             })
@@ -114,6 +144,7 @@ export const contextsSlice = createSlice({
 export const { initialize, resetStatus, deleteContext } = contextsSlice.actions;
 
 export const selectDictionaryName = (state: RootState) => state[CONTEXTS_REDUCER_KEY].dictionaryName;
+export const selectPhrasesCount = (state: RootState) => state[CONTEXTS_REDUCER_KEY].phrasesCount;
 export const selectStatus = (state: RootState) => state[CONTEXTS_REDUCER_KEY].status;
 export const selectContexts = (state: RootState) => state[CONTEXTS_REDUCER_KEY].contexts;
 export const selectHasMore = (state: RootState) => state[CONTEXTS_REDUCER_KEY].hasMore;
