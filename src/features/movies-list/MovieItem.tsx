@@ -6,8 +6,7 @@ import { useAppDispatch } from '../../store/hooks';
 import { deleteMovie, deleteMovieAsync } from '../../store/slices/moviesSlice';
 import { combineClassNames } from '../../util/classNames';
 import { Movie } from '../../util/types';
-
-import styles from './MovieItem.module.scss';
+import styles from '../styles/ListItem.module.scss';
 
 
 const MovieItem: FC<{
@@ -27,7 +26,11 @@ const MovieItem: FC<{
     const liElement = (
         <li
             ref={liRef}
-            className={combineClassNames(styles.movie, (isDeleting || isDeleted) && styles.mMovieDeleting)}
+            className={combineClassNames(
+                styles.item,
+                styles.mItemCentered,
+                (isDeleting || isDeleted) && styles.mItemDeleting
+            )}
         >
             <Link
                 className={styles.link}
@@ -36,7 +39,7 @@ const MovieItem: FC<{
                 {videoFilePath}
             </Link>
             <div
-                className={styles.removeButton}
+                className={combineClassNames(styles.button, styles.mButtonRemove)}
                 onClick={handleDeleteClick}
             />
         </li>

@@ -1,8 +1,22 @@
-.context {
-    // display: flex;
-    // justify-content: center;
-    // align-items: center;
-    margin-bottom: 20px;
+.item {
+    margin-bottom: 5px;
+
+    &.mItemCentered {
+        text-align: center;
+    }
+
+    &.mItemWithBigMargin {
+        margin-bottom: 20px;
+    }
+
+    &.mItemDeleting {
+        opacity: 0.5;
+        cursor: wait;
+
+        .link, .removeButton {
+            pointer-events: none;
+        }
+    }
 
     .link {
         color: #b8b7b4;
@@ -17,12 +31,13 @@
     }
 
     .button {
-        visibility: hidden;
         display: inline-block;
         margin: 0 3px;
         width: 16px;
         height: 16px;
         cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.1s ease;
 
         &.mButtonVideo {
             background: url("/images/video.png");
@@ -35,16 +50,7 @@
 
     &:hover {
         .button {
-            visibility: visible;
-        }
-    }
-
-    &.mContextDeleting {
-        opacity: 0.5;
-        cursor: wait;
-
-        .link, .removeButton {
-            pointer-events: none;
+            opacity: 1;
         }
     }
 }

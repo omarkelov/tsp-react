@@ -6,8 +6,7 @@ import { useAppDispatch } from '../../store/hooks';
 import { deleteDictionary, deleteDictionaryAsync } from '../../store/slices/dictionariesSlice';
 import { combineClassNames } from '../../util/classNames';
 import { Dictionary } from '../../util/types';
-
-import styles from './DictionaryItem.module.scss';
+import styles from '../styles/ListItem.module.scss';
 
 
 const DictionaryItem: FC<{
@@ -27,7 +26,11 @@ const DictionaryItem: FC<{
     const liElement = (
         <li
             ref={liRef}
-            className={combineClassNames(styles.dictionary, (isDeleting || isDeleted) && styles.mDictionaryDeleting)}
+            className={combineClassNames(
+                styles.item,
+                styles.mItemCentered,
+                (isDeleting || isDeleted) && styles.mItemDeleting
+            )}
         >
             <Link
                 className={styles.link}
@@ -36,7 +39,7 @@ const DictionaryItem: FC<{
                 {name}
             </Link>
             <div
-                className={styles.removeButton}
+                className={combineClassNames(styles.button, styles.mButtonRemove)}
                 onClick={handleDeleteClick}
             />
         </li>

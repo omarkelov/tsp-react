@@ -7,8 +7,7 @@ import { openPlayer } from '../../store/slices/playerSlice';
 import { combineClassNames } from '../../util/classNames';
 import { Context, Phrase } from '../../util/types';
 import PhraseElement from '../phrase/PhraseElement';
-
-import styles from './ContextItem.module.scss';
+import styles from '../styles/ListItem.module.scss';
 
 
 const generateContextWithPhrases = (context: string, phrases: Phrase[] = []) => {
@@ -47,7 +46,11 @@ const ContextItem: FC<{
     const liElement = (
         <li
             ref={liRef}
-            className={combineClassNames(styles.context, (isDeleting || isDeleted) && styles.mContextDeleting)}
+            className={combineClassNames(
+                styles.item,
+                styles.mItemWithBigMargin,
+                (isDeleting || isDeleted) && styles.mItemDeleting
+            )}
         >
             <span>
                 {generateContextWithPhrases(context, phrases)}
