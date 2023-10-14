@@ -16,18 +16,25 @@
         }
     }
 
-    .removeButton {
+    .button {
         visibility: hidden;
         display: inline-block;
         margin: 0 3px;
         width: 16px;
         height: 16px;
-        background: url("/images/delete-cross.png");
         cursor: pointer;
+
+        &.mButtonVideo {
+            background: url("/images/video.png");
+        }
+
+        &.mButtonRemove {
+            background: url("/images/delete-cross.png");
+        }
     }
 
     &:hover {
-        .removeButton {
+        .button {
             visibility: visible;
         }
     }

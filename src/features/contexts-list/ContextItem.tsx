@@ -3,6 +3,7 @@ import { FC, memo, ReactNode, useRef } from 'react';
 import SlideUp from '../../components/slide-up/SlideUp';
 import { useAppDispatch } from '../../store/hooks';
 import { deleteContext, deleteContextAsync } from '../../store/slices/contextsSlice';
+import { openPlayer } from '../../store/slices/playerSlice';
 import { combineClassNames } from '../../util/classNames';
 import { Context, Phrase } from '../../util/types';
 import PhraseElement from '../phrase/PhraseElement';
@@ -51,8 +52,14 @@ const ContextItem: FC<{
             <span>
                 {generateContextWithPhrases(context, phrases)}
             </span>
+            {!!link?.length && (
+                <div
+                    className={combineClassNames(styles.button, styles.mButtonVideo)}
+                    onClick={() => dispatch(openPlayer(link))}
+                />
+            )}
             <div
-                className={styles.removeButton}
+                className={combineClassNames(styles.button, styles.mButtonRemove)}
                 onClick={handleDeleteClick}
             />
         </li>
