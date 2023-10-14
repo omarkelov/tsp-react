@@ -17,6 +17,7 @@ import contextsReducer, { CONTEXTS_REDUCER_KEY } from './slices/contextsSlice';
 import dictionariesReducer, { DICTIONARIES_REDUCER_KEY } from './slices/dictionariesSlice';
 import moviesReducer, { MOVIES_REDUCER_KEY } from './slices/moviesSlice';
 import notificationsReducer, { NOTIFICATIONS_REDUCER_KEY } from './slices/notificationsSlice';
+import playerReducer, { PLAYER_REDUCER_KEY } from './slices/playerSlice';
 
 
 const persistConfig = {
@@ -31,6 +32,7 @@ const appReducer = combineReducers({
     [DICTIONARIES_REDUCER_KEY]: dictionariesReducer,
     [NOTIFICATIONS_REDUCER_KEY]: notificationsReducer,
     [MOVIES_REDUCER_KEY]: moviesReducer,
+    [PLAYER_REDUCER_KEY]: playerReducer,
 });
 
 const rootReducer = (state: ReturnType<typeof appReducer> | undefined, action: AnyAction) => {

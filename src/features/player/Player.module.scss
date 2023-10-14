@@ -1,0 +1,30 @@
+.root {
+    display: table-cell;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.75);
+
+    .video {
+        margin-top: 20px;
+        max-width: calc(100% - 40px);
+        max-height: calc(100% - 40px);
+    }
+
+    .closePlayerButton {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 48px;
+        height: 48px;
+        background: url("/images/player-close.png");
+        cursor: pointer;
+
+        &:hover {
+            background: url("/images/player-close-hover.png");
+        }
+    }
+}

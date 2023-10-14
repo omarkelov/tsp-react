@@ -4,6 +4,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import NavigationBar from './features/navigation-bar/NavigationBar';
 import NotificationsList from './features/notifications/NotificationsList';
+import Player from './features/player/Player';
 import { PageRoute, privateRoutes, publicRoutes } from './routes';
 import { selectLogin } from './store/slices/authSlice';
 import styles from './styles/App.module.scss';
@@ -29,6 +30,7 @@ const App: FC = () => {
                         {generateRoutes(privateRoutes)}
                         <Route path='*' element={<Navigate to='/dictionaries' replace />} />
                     </Routes>
+                    <Player />
                 </div>
             ) : (
                 <Routes>
