@@ -1,0 +1,28 @@
+.root {
+    position: relative;
+    display: inline-block;
+
+    .tooltip {
+        position: absolute;
+        bottom: calc(100% + 7px);
+        left: 50%;
+        padding: 7px 20px;
+        border: 1px solid #111111;
+        border-radius: 999px;
+        text-align: center;
+        font-style: italic;
+        background: #f0ece9;
+        color: #111111;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.35);
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity 0.1s ease;
+        pointer-events: none;
+    }
+
+    &:hover {
+        .tooltip {
+            opacity: 1;
+        }
+    }
+}
