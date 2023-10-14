@@ -15,6 +15,7 @@ const InfiniteList: FC<{
     status: LoadingStatus;
     hasMore: boolean;
     page: number;
+    isEnumerated?: boolean;
     dispatchGetNextEntitiesAsync: (page: number) => any; // TODO: type
     dispatchResetStatus: () => any; // TODO: type
 }> = memo(({
@@ -23,6 +24,7 @@ const InfiniteList: FC<{
     status,
     hasMore,
     page,
+    isEnumerated = false,
     dispatchGetNextEntitiesAsync,
     dispatchResetStatus,
 }) => {
@@ -36,11 +38,13 @@ const InfiniteList: FC<{
         dispatchResetStatus();
     }, [dispatchResetStatus]);
 
+    const List = isEnumerated ? 'ol' : 'ul';
+
     return (
         <div className={styles.root}>
-            <ul className={styles.entities}>
+            <List className={styles.entities}>
                 {children}
-            </ul>
+            </List>
             {hasMore && (
                 <div className={styles.loadingRoot}>
                     {status === 'failed'
