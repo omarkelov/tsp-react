@@ -1,9 +1,11 @@
 import { FC, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
+import Button from '../../components/button/Button';
 import ContextsList from '../../features/contexts-list/ContextsList';
 import PageContent from '../../features/page-content/PageContent';
 import { useAbortOnUnmount } from '../../hooks/abortOnUnmount';
+import { useNavigateFurther } from '../../hooks/navigateFurther';
 import { useAppTitle } from '../../hooks/title';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { getPhrasesCountAsync, initialize, selectDictionaryName, selectPhrasesCount } from '../../store/slices/contextsSlice';
@@ -12,6 +14,8 @@ import styles from './DictionaryPage.module.scss';
 
 
 const DictionaryPage: FC = () => {
+    const navigateFurther = useNavigateFurther();
+
     const dictionaryName = useParams().name!;
 
     useAppTitle(dictionaryName);
@@ -33,11 +37,18 @@ const DictionaryPage: FC = () => {
 
     return (
         <PageContent title={dictionaryName}>
-            {phrasesCount && (
-                <h4 className={styles.phrasesCount}>
-                    {`(${phrasesCount} phrases)`}
-                </h4>
-            )}
+            <div className={styles.header}>
+                {phrasesCount && (
+                    <h4 className={styles.phrasesCount}>
+                        {`(${phrasesCount} phrases)`}
+                    </h4>
+                )}
+                <Button
+                    value='Test'
+                    className={styles.testButton}
+                    onClick={() => navigateFurther('test')}
+                />
+            </div>
             <ContextsList />
         </PageContent>
     );

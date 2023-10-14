@@ -1,4 +1,19 @@
-.phrasesCount {
-    text-align: center;
-    margin: 10px;
+.header {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: 5px;
+    justify-items: center;
+    align-items: center;
+    margin: 10px 0;
+
+    .phrasesCount {
+        grid-column-start: 2;
+        margin: 0;
+        white-space: nowrap;
+    }
+
+    .testButton {
+        grid-column-start: 3;
+        margin-left: auto;
+    }
 }
