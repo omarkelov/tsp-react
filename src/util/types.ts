@@ -11,16 +11,16 @@ export type PhraseStats = {
 export type Phrase = {
     id: number;
     phrase: string;
-    correctedPhrase: string;
     translation: string;
-    phraseStats: PhraseStats;
+    correctedPhrase?: string;
+    phraseStats?: PhraseStats;
 }
 
 export type Context = {
     id: number;
     context: string;
-    link: string;
-    phrases: Phrase[];
+    link?: string;
+    phrases?: Phrase[];
 }
 
 export type Movie = {
