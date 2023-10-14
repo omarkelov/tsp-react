@@ -1,5 +1,6 @@
 import { createListenerMiddleware, TypedStartListening } from '@reduxjs/toolkit';
 
+import { startContextDeletionRejectionListener } from './listeners/contextDeletionRejectionListener';
 import { startDictionaryDeletionRejectionListener } from './listeners/dictionaryDeletionRejectionListener';
 import { startMovieDeletionRejectionListener } from './listeners/movieDeletionRejectionListener';
 import { startUnauthorizedErrorListener } from './listeners/unauthorizedErrorListener';
@@ -15,4 +16,5 @@ export const startAppListening = listenerMiddleware.startListening as TypedStart
 
 startUnauthorizedErrorListener();
 startDictionaryDeletionRejectionListener();
+startContextDeletionRejectionListener();
 startMovieDeletionRejectionListener();
