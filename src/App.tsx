@@ -29,6 +29,7 @@ const App: FC = () => {
                     <NavigationBar />
                     <Routes>
                         {generateRoutes(privateRoutes)}
+                        <Route path='/login' element={<Navigate to='/dictionaries' replace />} />
                         <Route path='*' element={<NotFoundPage />} />
                     </Routes>
                     <Player />
