@@ -37,18 +37,18 @@ const DictionaryPage: FC = () => {
 
     return (
         <PageContent title={dictionaryName}>
-            <div className={styles.header}>
-                {phrasesCount && (
+            {!!phrasesCount && (
+                <div className={styles.header}>
                     <h4 className={styles.phrasesCount}>
                         {`(${phrasesCount} phrases)`}
                     </h4>
-                )}
-                <Button
-                    value='Test'
-                    className={styles.testButton}
-                    onClick={() => navigateFurther('test')}
-                />
-            </div>
+                    <Button
+                        value='Test'
+                        className={styles.testButton}
+                        onClick={() => navigateFurther('test')}
+                    />
+                </div>
+            )}
             <ContextsList />
         </PageContent>
     );
