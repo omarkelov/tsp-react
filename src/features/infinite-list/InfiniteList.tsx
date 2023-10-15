@@ -1,4 +1,4 @@
-import { FC, memo, ReactNode, useCallback, useEffect } from 'react';
+import { Children, FC, memo, ReactNode, useCallback, useEffect } from 'react';
 
 import Button from '../../components/button/Button';
 import Spinner from '../../components/spinner/Spinner';
@@ -39,12 +39,19 @@ const InfiniteList: FC<{
     }, [dispatchResetStatus]);
 
     const List = isEnumerated ? 'ol' : 'ul';
+    const hasChildren = children && Children.count(children);
 
     return (
         <div className={styles.root}>
-            <List className={styles.entities}>
-                {children}
-            </List>
+            {!hasChildren && !hasMore ? (
+                <div className={styles.noEntities}>
+                    {`— no ${entitiesName} —`}
+                </div>
+            ) : (
+                <List>
+                    {children}
+                </List>
+            )}
             {hasMore && (
                 <div className={styles.loadingRoot}>
                     {status === 'failed'
