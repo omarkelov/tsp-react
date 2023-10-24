@@ -23,6 +23,11 @@ export type Context = {
     phrases?: Phrase[];
 }
 
+export type Test = {
+    name: string;
+    phrasesIds: number[];
+}
+
 export type Movie = {
     id: number;
     videoFilePath: string;
