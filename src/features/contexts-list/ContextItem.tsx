@@ -31,8 +31,8 @@ const generateContextWithPhrases = (context: string, phrases: Phrase[] = []) => 
 
 const ContextItem: FC<{
     context: Context;
-    isDeleting: boolean;
-    isDeleted: boolean;
+    isDeleting?: boolean;
+    isDeleted?: boolean;
 }> = memo(({ context: { id, context, link, phrases }, isDeleting, isDeleted }) => {
     const dispatch = useAppDispatch();
     const liRef = useRef<HTMLLIElement>(null);
@@ -61,10 +61,12 @@ const ContextItem: FC<{
                     onClick={() => dispatch(openPlayer(link))}
                 />
             )}
-            <div
-                className={combineClassNames(styles.button, styles.mButtonRemove)}
-                onClick={handleDeleteClick}
-            />
+            {isDeleting !== undefined && (
+                <div
+                    className={combineClassNames(styles.button, styles.mButtonRemove)}
+                    onClick={handleDeleteClick}
+                />
+            )}
         </li>
     );
 
