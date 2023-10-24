@@ -1,11 +1,10 @@
 import { FC, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import Button from '../../components/button/Button';
 import ContextsList from '../../features/contexts-list/ContextsList';
 import PageContent from '../../features/page-content/PageContent';
 import { useAbortOnUnmount } from '../../hooks/abortOnUnmount';
-import { useNavigateFurther } from '../../hooks/navigateFurther';
 import { useAppTitle } from '../../hooks/title';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { getPhrasesCountAsync, initialize, selectDictionaryName, selectPhrasesCount } from '../../store/slices/contextsSlice';
@@ -14,7 +13,7 @@ import styles from './DictionaryPage.module.scss';
 
 
 const DictionaryPage: FC = () => {
-    const navigateFurther = useNavigateFurther();
+    const navigate = useNavigate();
 
     const dictionaryName = useParams().name!;
 
@@ -45,7 +44,7 @@ const DictionaryPage: FC = () => {
                     <Button
                         value='Test'
                         className={styles.testButton}
-                        onClick={() => navigateFurther('test')}
+                        onClick={() => navigate('./test')}
                     />
                 </div>
             )}
