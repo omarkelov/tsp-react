@@ -17,11 +17,13 @@ const classNameByVariant: {
 const Button: FC<{
     value: string;
     variant?: Variant;
+    isDisabled?: boolean;
     className?: string;
     onClick?: React.MouseEventHandler<HTMLButtonElement>;
-}> = ({ value, variant = 'primary', className, onClick }) => (
+}> = ({ value, variant = 'primary', isDisabled, className, onClick }) => (
     <button
         className={combineClassNames(styles.button, classNameByVariant[variant], className)}
+        disabled={isDisabled}
         onClick={onClick}
     >
         {value}

@@ -15,7 +15,20 @@
         }
     }
 
+    &.mButtonSecondary {
+        background: #00fdad;
+
+        &:hover {
+            background: #00fd89;
+        }
+    }
+
     &:disabled {
+        cursor: auto;
         background: #b8b7b4;
+
+        &:hover {
+            background: #b8b7b4;
+        }
     }
 }
