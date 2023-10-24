@@ -5,6 +5,7 @@ import { Context, LoadingStatus, ResponseError, Test } from '../../util/types';
 import { RootState } from '../store';
 
 import { CONTEXTS_REDUCER_KEY } from './contextsSlice';
+import { updatePhraseStatistics } from './util/phraseUtils';
 
 
 export const TEST_REDUCER_KEY = 'test';
@@ -116,23 +117,8 @@ export const testSlice = createSlice({
             .addCase(getContextAsync.rejected, state => {
                 state.phraseStatus = 'failed';
             })
-            .addCase(updatePhraseStatsAsync.fulfilled, (state, { meta: { arg: { phraseId, isCorrect } } }) => {
-                const phrase = state.context?.phrases?.find(({ id }) => id === phraseId);
-
-                if (!phrase) {
-                    return state;
-                }
-
-                phrase.phraseStats ??= {
-                    successfulAttempts: 0,
-                    attempts: 0,
-                };
-
-                if (isCorrect) {
-                    phrase.phraseStats.successfulAttempts++;
-                }
-
-                phrase.phraseStats.attempts++;
+            .addCase(updatePhraseStatsAsync.fulfilled, (state, { meta: { arg: updateInfo } }) => {
+                updatePhraseStatistics(state.context, updateInfo);
             }),
 });
 

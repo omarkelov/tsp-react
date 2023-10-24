@@ -5,6 +5,7 @@ import { Context, DeletionStatus, LoadingStatus, ResponseError } from '../../uti
 import { RootState } from '../store';
 
 import { addNotification } from './notificationsSlice';
+import { updatePhraseStatistics } from './util/phraseUtils';
 
 
 export const CONTEXTS_REDUCER_KEY = 'contexts';
@@ -42,7 +43,8 @@ export const getPhrasesCountAsync = createAsyncThunk<number, void, { rejectValue
         }
 
         return response.json();
-    }, {
+    },
+    {
         condition: (_, { getState }) => {
             const { dictionaryName } = (getState() as RootState)[CONTEXTS_REDUCER_KEY];
 
@@ -107,6 +109,13 @@ export const contextsSlice = createSlice({
             state.contexts = state.contexts.filter(c => c.id !== id);
             delete state.deletionStatusByContextId[id];
         },
+        updatePhraseStats: (state, { payload: updateInfo }: { payload: { phraseId: number, isCorrect: boolean } }) => {
+            for (const context of state.contexts) {
+                if (updatePhraseStatistics(context, updateInfo)) {
+                    break;
+                }
+            }
+        },
     },
     extraReducers: builder =>
         builder
@@ -141,7 +150,7 @@ export const contextsSlice = createSlice({
             }),
 });
 
-export const { initialize, resetStatus, deleteContext } = contextsSlice.actions;
+export const { initialize, resetStatus, deleteContext, updatePhraseStats } = contextsSlice.actions;
 
 export const selectDictionaryName = (state: RootState) => state[CONTEXTS_REDUCER_KEY].dictionaryName;
 export const selectPhrasesCount = (state: RootState) => state[CONTEXTS_REDUCER_KEY].phrasesCount;

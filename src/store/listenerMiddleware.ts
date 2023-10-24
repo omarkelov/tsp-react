@@ -4,6 +4,7 @@ import { startContextDeletionRejectionListener } from './listeners/contextDeleti
 import { startDictionaryDeletionRejectionListener } from './listeners/dictionaryDeletionRejectionListener';
 import { startMovieDeletionRejectionListener } from './listeners/movieDeletionRejectionListener';
 import { startUnauthorizedErrorListener } from './listeners/unauthorizedErrorListener';
+import { startUpdatePhraseStatsListener } from './listeners/updatePhraseStatsListener';
 import { AppDispatch, RootState } from './store';
 
 
@@ -18,3 +19,4 @@ startUnauthorizedErrorListener();
 startDictionaryDeletionRejectionListener();
 startContextDeletionRejectionListener();
 startMovieDeletionRejectionListener();
+startUpdatePhraseStatsListener();
