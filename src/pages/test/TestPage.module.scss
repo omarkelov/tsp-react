@@ -1,0 +1,15 @@
+.titleLink {
+    color: #f0ece9;
+
+    &:visited {
+        color: #f0ece9;
+    }
+
+    &:hover {
+        text-decoration: underline dotted;
+    }
+}
+
+.spinner {
+    margin: 40px auto;
+}

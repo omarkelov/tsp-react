@@ -5,7 +5,7 @@ import DictionaryPage from './pages/dictionary/DictionaryPage';
 import LoginPage from './pages/login/LoginPage';
 import MoviePage from './pages/MoviePage';
 import MoviesPage from './pages/movies/MoviesPage';
-import TestPage from './pages/TestPage';
+import TestPage from './pages/test/TestPage';
 
 
 export interface PageRoute {
