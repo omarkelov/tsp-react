@@ -4,7 +4,7 @@ import styles from './PageContent.module.scss';
 
 
 const PageContent: FC<{
-    title?: string;
+    title?: ReactNode;
     children?: ReactNode;
 }> = ({ title, children }) => (
     <div>
